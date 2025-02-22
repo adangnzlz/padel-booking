@@ -1,15 +1,19 @@
-const express = require("express");
-const cors = require("cors");
+import express, { Request, Response } from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
-const PORT = process.envPORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
+app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Hola");
+app.get('/', (req: Request, res: Response) => {
+    res.send('Hola desde la API de Finanzas con TypeScript');
 });
 
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
