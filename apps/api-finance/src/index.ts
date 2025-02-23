@@ -1,12 +1,14 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
+import helmet from "helmet";
 import dotenv from "dotenv";
 import usersRoutes from "./routers/users.routes";
 import transactionsRoutes from "./routers/transactions.routes";
 import compression = require("compression");
 import { httpRequestLogger } from "./middlewares/http-request-logger.middleware";
 import { logger } from "./winston";
-import { httpErrorInterceptor } from "./middlewares/http-error-logger.middleware";
+import { httpErrorInterceptor } from "./middlewares/http-error-interceptor.middleware";
+import { apiRateLimiter } from "./middlewares/rate-limiter.middleware";
 
 dotenv.config();
 
@@ -14,10 +16,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 
+app.use(httpRequestLogger());
+app.use(apiRateLimiter);
 app.use(compression());
 app.use(cors());
-app.use(express.json());
-app.use(httpRequestLogger());
+app.use(express.json({ limit: '10kb' }));
+app.use(helmet());
 
 
 app.get("/", (req: Request, res: Response) => {
@@ -36,9 +40,8 @@ app.listen(PORT, () => {
 });
 
 
-// Validation libraries express
 // add a database
 // practice transactions
-// Uso del logger
-// por que no se muestra logger
 // TDD
+// helmet
+// Redis

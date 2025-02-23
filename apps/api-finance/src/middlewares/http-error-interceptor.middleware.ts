@@ -11,12 +11,14 @@ export function httpErrorInterceptor() {
       errorMessage
     )}`;
     if (statusCode >= 500) {
-      logger.error(`❌ Server Error: ${logMessage}`);
+      logger.error({ message: `❌ Server Error: ${logMessage}` });
     } else if (statusCode >= 400) {
-      logger.warn(`⚠️ Client Error: ${logMessage}`);
+      logger.warn({ message: `⚠️ Client Error: ${logMessage}` });
     }
     res.status(statusCode).json({
-      error: Array.isArray(err.errors) ? err.errors : err.message || "Internal Server Error",
+      error: Array.isArray(err.errors)
+        ? err.errors
+        : err.message || "Internal Server Error",
     });
   };
 }

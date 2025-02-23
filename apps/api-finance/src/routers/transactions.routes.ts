@@ -55,14 +55,16 @@ router.post(
     body("senderEmail")
       .notEmpty()
       .withMessage("Sender email required")
+      .trim()
       .isEmail()
       .withMessage("Invalid sender email"),
     body("receiverEmail")
       .notEmpty()
       .withMessage("Receiver email required")
+      .trim()
       .isEmail()
       .withMessage("Invalid receiver email"),
-    body("amount").isFloat({ gt: 0 }).withMessage("Positive amount required"),
+    body("amount").trim().isFloat({ gt: 0 }).withMessage("Positive amount required"),
   ],
   asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { senderEmail, receiverEmail, amount } = req.body;
@@ -70,16 +72,19 @@ router.post(
     const errors = validationResult(req);
     if (errors && !errors.isEmpty()) throw new HttpError(errors.array(), 400);
 
-    if (senderEmail === receiverEmail) throw new HttpError("Emails should be different", 400);
-    if (!getUserByEmail(senderEmail)) throw new HttpError("Sender email not exists", 400);
-    if (!getUserByEmail(receiverEmail)) throw new HttpError("Receiver email not exists", 400);
+    if (senderEmail === receiverEmail)
+      throw new HttpError("Emails should be different", 400);
+    if (!getUserByEmail(senderEmail))
+      throw new HttpError("Sender email not exists", 400);
+    if (!getUserByEmail(receiverEmail))
+      throw new HttpError("Receiver email not exists", 400);
 
     if (isNaN(amount) || amount <= 0)
       throw new HttpError("Amount should be positive", 400);
 
     transactions.push({ senderEmail, receiverEmail, amount });
     res.status(201).json({ message: "Transaction created successfully" });
-  }
-));
+  })
+);
 
 export default router;

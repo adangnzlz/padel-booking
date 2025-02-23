@@ -9,6 +9,7 @@ import { isValidEmail } from "../utils/utils";
 import { HttpError } from "../errors/http-error";
 import asyncHandler from "express-async-handler";
 import { body, validationResult } from "express-validator";
+import { strictRateLimiter } from "../middlewares/rate-limiter.middleware";
 
 const router = Router();
 
@@ -25,18 +26,21 @@ router.get(
 router.post(
   "/",
   [
-    body("name").notEmpty().withMessage("Name is required"),
+    body("name").notEmpty().withMessage("Name is required").trim(),
     body("email")
       .notEmpty()
       .withMessage("Email is required")
+      .trim()
       .isEmail()
       .withMessage("Invalid email"),
     body("password")
       .notEmpty()
+      .trim()
       .withMessage("Password is required")
       .isLength({ min: 6 })
       .withMessage("Password is required. Min lenght 6 characteres"),
   ],
+  strictRateLimiter,
   asyncHandler(async (req: Request, res: Response): Promise<void> => {
     const { name, email, password } = req.body;
 
