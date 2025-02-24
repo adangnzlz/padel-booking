@@ -1,27 +1,26 @@
-import { Router, Request, Response } from "express";
-import {
-  createUser,
-  getUserByEmail,
-  getUsers,
-  User,
-} from "../services/users.service";
-import { isValidEmail } from "../utils/utils";
-import { HttpError } from "../errors/http-error";
+import { Router } from "express";
 import asyncHandler from "express-async-handler";
-import { body, validationResult } from "express-validator";
+import { body } from "express-validator";
 import { strictRateLimiter } from "../middlewares/rate-limiter.middleware";
+import {
+  createUserController,
+  getUsersController,
+} from "../controllers/users.controller";
 
 const router = Router();
 
-router.get(
-  "/",
-  asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const response: Partial<User>[] = await Promise.resolve(
-      getUsers().map((x) => ({ ...x, password: undefined }))
-    );
-    res.status(200).json(response);
-  })
-);
+router.get("/", asyncHandler(getUsersController));
+
+// router.get(
+//   "/:email",
+//   [param("email").isEmail().withMessage("Invalid email format")],
+//   asyncHandler(async (req: Request, res: Response): Promise<void> => {
+//     const email = req.params.email;
+//     const user = getUserByEmail(email);
+//     if (!user) throw new HttpError("User not found", 404);
+//     res.status(200).json(user);
+//   })
+// );
 
 router.post(
   "/",
@@ -41,22 +40,7 @@ router.post(
       .withMessage("Password is required. Min lenght 6 characteres"),
   ],
   strictRateLimiter,
-  asyncHandler(async (req: Request, res: Response): Promise<void> => {
-    const { name, email, password } = req.body;
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) throw new HttpError(errors.array(), 400);
-
-    if (getUserByEmail(email))
-      throw new HttpError("Email already registered", 400);
-
-    const user = await createUser({ name, email, password });
-    if (user) {
-      res.status(201).json({ message: "User created successfully" });
-    } else {
-      res.status(500).json({ error: "Failed to process request" });
-    }
-  })
+  asyncHandler(createUserController)
 );
 
 export default router;

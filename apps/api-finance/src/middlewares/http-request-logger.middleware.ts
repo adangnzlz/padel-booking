@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { logger } from "../winston";
+import { logger } from "../config/winston";
 
 function logObject(
   req: Request,

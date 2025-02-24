@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import { DatabaseFactory } from "../providers/database.factory";
 
 export interface User {
   name: string;
@@ -6,41 +7,27 @@ export interface User {
   password: string;
 }
 
-const users: User[] = [];
+const database = DatabaseFactory.get<User>("users");
 
-async function plainPasswordToHash(
-  password: string
-): Promise<string | undefined> {
+export async function createUser(user: User): Promise<Omit<User, "password">> {
+  const existingUser = await getUserByEmail(user.email);
+  if (existingUser) throw new Error("EMAIL_ALREADY_REGISTERED");
+  let hashedPassword;
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    return hashedPassword;
+    hashedPassword = await bcrypt.hash(user.password, 10);
   } catch (error) {
-    console.error("Error hashing password:", error);
-    return; // Or throw a custom error
+    throw new Error("Failed to hash password");
   }
+  if (!hashedPassword) throw new Error("FAILED_TO_HASH_PASSWORD");
+  await database.create({ ...user, password: hashedPassword });
+  const { password, ...userWithoutPassword } = user;
+  return userWithoutPassword;
 }
 
-export async function createUser(
-  user: User
-): Promise<Partial<User | undefined>> {
-  try {
-    const hashedPass = await plainPasswordToHash(user.password);
-    if (hashedPass) {
-      users.push({ ...user, password: hashedPass });
-      return { ...user, password: undefined };
-    } else {
-      return;
-    }
-  } catch (error) {
-    console.log(error);
-    return;
-  }
+export async function getUserByEmail(email: string): Promise<User | undefined> {
+  return await database.getByField("email", email);
 }
 
-export function getUserByEmail(email: string): User | undefined {
-  return users.find((x) => x.email == email);
-}
-
-export function getUsers(): User[] {
-  return users;
+export async function getUsers(): Promise<Omit<User, "password">[]> {
+  return await database.read();
 }
