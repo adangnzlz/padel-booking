@@ -1,7 +1,7 @@
 import { DatabaseProvider } from "./database.provider";
 import { FileDatabaseProvider } from "./file-database.provider";
 import { MemoryDatabaseProvider } from "./memory-database.provider";
-import { PostgressDatabaseProvider } from "./postgres-database.provider";
+import { PostgresDatabaseProvider } from "./postgres-database.provider";
 
 export enum DatabaseType {
   FILE = "file",
@@ -25,7 +25,7 @@ export class DatabaseFactory {
           instance = new MemoryDatabaseProvider<T>();
           break;
         case DatabaseType.POSTGRES:
-          instance = new PostgressDatabaseProvider<T>(name);
+          instance = new PostgresDatabaseProvider<T>(name);
           break;
         default:
           throw new Error("Invalid database type");

@@ -1,6 +1,4 @@
-import {
-  DatabaseFactory,
-} from "../src/providers/database.factory";
+import { DatabaseFactory } from "../src/providers/database.factory";
 import {
   createUser,
   getUserByEmail,
@@ -9,11 +7,7 @@ import {
 } from "../src/services/users.service";
 import bcrypt from "bcryptjs";
 
-
-
 jest.mock("bcryptjs"); // ✅ Mock bcrypt to avoid real hashing
-
-
 
 describe("User Service", () => {
   beforeEach(() => {
@@ -44,7 +38,7 @@ describe("User Service", () => {
     await expect(
       createUser({
         name: "Adán",
-        email: "adan@gmail.com",
+        email: "Adán@gmail.com",
         password: "newpassword",
       })
     ).rejects.toThrow("FAILED_TO_HASH_PASSWORD");
@@ -54,12 +48,12 @@ describe("User Service", () => {
     (bcrypt.hash as jest.Mock).mockReturnValue("verysecurepassword");
     await createUser({
       name: "Adán",
-      email: "adan@gmail.com",
+      email: "Adán@gmail.com",
       password: "newpassword",
     });
     await createUser({
       name: "Adán2",
-      email: "adan2@gmail.com",
+      email: "Adán2@gmail.com",
       password: "newpassword2",
     });
 
@@ -90,9 +84,18 @@ describe("User Service", () => {
     await expect(
       createUser({
         name: "Adán",
-        email: "adan@gmail.com",
+        email: "Adán@gmail.com",
         password: "newpassword",
       })
     ).rejects.toThrow("Failed to hash password");
+  });
+
+  afterAll(() => {
+    jest.resetAllMocks();
+    const database = DatabaseFactory.get("users");
+    database.clear();
+    if (database.close) {
+      database.close();
+    }
   });
 });

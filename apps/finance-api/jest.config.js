@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: "api-finance",
+  displayName: "finance-api",
   preset: "ts-jest", // ✅ Ensure Jest uses ts-jest to handle TypeScript
   testEnvironment: "node",
   roots: ["<rootDir>/src", "<rootDir>/tests"],
