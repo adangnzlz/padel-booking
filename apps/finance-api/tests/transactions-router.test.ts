@@ -6,6 +6,8 @@ jest.mock("../src/services/users.service", () => ({
   getUserByEmail: jest.fn(),
 }));
 
+const routerUrl = `${process.env.API_VERSION}/transactions`;
+
 describe("Transactions API", () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -13,7 +15,7 @@ describe("Transactions API", () => {
 
   // ✅ Test GET `/transactions` without filters
   it("should return all transactions when no filters are applied", async () => {
-    const res = await request(app).get("/transactions");
+    const res = await request(app).get(routerUrl);
 
     expect(res.status).toBe(200);
     expect(Array.isArray(res.body)).toBe(true); // Should return an array
@@ -24,7 +26,7 @@ describe("Transactions API", () => {
     (getUserByEmail as jest.Mock).mockReturnValueOnce(null);
 
     const res = await request(app)
-      .get("/transactions")
+      .get(routerUrl)
       .query({ senderEmail: "unknown@example.com" });
 
     expect(res.status).toBe(400);
@@ -36,7 +38,7 @@ describe("Transactions API", () => {
     (getUserByEmail as jest.Mock).mockReturnValueOnce(null);
 
     const res = await request(app)
-      .get("/transactions")
+      .get(routerUrl)
       .query({ receiverEmail: "unknown@example.com" });
 
     expect(res.status).toBe(400);
@@ -47,7 +49,7 @@ describe("Transactions API", () => {
   it("should create a transaction when data is valid", async () => {
     (getUserByEmail as jest.Mock).mockReturnValue(true); // ✅ Mock user existence
 
-    const res = await request(app).post("/transactions").send({
+    const res = await request(app).post(routerUrl).send({
       senderEmail: "alice@example.com",
       receiverEmail: "bob@example.com",
       amount: 100,
@@ -59,7 +61,7 @@ describe("Transactions API", () => {
 
   // ✅ Test POST `/transactions` (Invalid email format)
   it("should fail if senderEmail is invalid", async () => {
-    const res = await request(app).post("/transactions").send({
+    const res = await request(app).post(routerUrl).send({
       senderEmail: "invalidemail",
       receiverEmail: "bob@example.com",
       amount: 100,
@@ -71,7 +73,7 @@ describe("Transactions API", () => {
 
   // ✅ Test POST `/transactions` (Sender and receiver emails must be different)
   it("should fail if sender and receiver emails are the same", async () => {
-    const res = await request(app).post("/transactions").send({
+    const res = await request(app).post(routerUrl).send({
       senderEmail: "alice@example.com",
       receiverEmail: "alice@example.com",
       amount: 100,
@@ -85,7 +87,7 @@ describe("Transactions API", () => {
   it("should fail if sender does not exist", async () => {
     (getUserByEmail as jest.Mock).mockImplementation((email) => undefined);
 
-    const res = await request(app).post("/transactions").send({
+    const res = await request(app).post(routerUrl).send({
       senderEmail: "unknown@example.com",
       receiverEmail: "bob@example.com",
       amount: 100,
@@ -101,7 +103,7 @@ describe("Transactions API", () => {
       (email) => email !== "unknown@example.com"
     );
 
-    const res = await request(app).post("/transactions").send({
+    const res = await request(app).post(routerUrl).send({
       senderEmail: "alice@example.com",
       receiverEmail: "unknown@example.com",
       amount: 100,
@@ -113,9 +115,8 @@ describe("Transactions API", () => {
     );
   });
 
-  // ✅ Test POST `/transactions` (Amount must be positive)
   it("should fail if amount is zero or negative", async () => {
-    const res = await request(app).post("/transactions").send({
+    const res = await request(app).post(routerUrl).send({
       senderEmail: "alice@example.com",
       receiverEmail: "bob@example.com",
       amount: -10,
@@ -123,10 +124,9 @@ describe("Transactions API", () => {
 
     expect(res.status).toBe(400);
     expect(JSON.stringify(res.body)).toEqual(
-      expect.stringContaining("Positive amount require")
+      expect.stringContaining("Positive amount required")
     );
   });
-
   afterAll(() => {
     server.close(); // ✅ Close the Express server after all tests
   });

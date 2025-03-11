@@ -19,6 +19,8 @@ jest.mock("../src/middlewares/rate-limiter.middleware", () => ({
 const mockUser: Partial<User> = { name: "Alice", email: "alice@example.com" };
 const mockUserList = [mockUser];
 
+const routerUrl = `${process.env.API_VERSION}/users`;
+
 describe("User API", () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -26,15 +28,19 @@ describe("User API", () => {
 
   it("should return a list of users without passwords", async () => {
     (getUsers as jest.Mock).mockReturnValue(mockUserList);
-    const res = await request(app).get("/users");
+    const res = await request(app).get(routerUrl);
+    
     expect(res.status).toBe(200);
     expect(res.body).toEqual(mockUserList); // ✅ Password should be removed
   });
 
   it("should create a user and return 201 status", async () => {
-    (createUser as jest.Mock).mockReturnValue({ name: "Adán", email: "adan@gmail.com"});
+    (createUser as jest.Mock).mockReturnValue({
+      name: "Adán",
+      email: "adan@gmail.com",
+    });
     const res = await request(app)
-      .post("/users")
+      .post(routerUrl)
       .send({ name: "Adán", email: "adan@gmail.com", password: "newpassword" });
     expect(res.status).toBe(201);
     expect(res.body).toEqual({ message: "User created successfully" }); // ✅ Password should be removed
@@ -42,14 +48,14 @@ describe("User API", () => {
 
   it("should fails because invalid email", async () => {
     const res = await request(app)
-      .post("/users")
+      .post(routerUrl)
       .send({ name: "Adán", email: "adangmailcom", password: "newpassword" });
     expect(res.status).toBe(400);
     expect(JSON.stringify(res.body)).toContain("Invalid email");
   });
 
   it("should fails because required fields", async () => {
-    const res = await request(app).post("/users").send({});
+    const res = await request(app).post(routerUrl).send({});
     expect(res.status).toBe(400);
     expect(JSON.stringify(res.body)).toEqual(
       expect.stringContaining("Name is required")
@@ -60,7 +66,7 @@ describe("User API", () => {
 
   it("should fails because password too short", async () => {
     const res = await request(app)
-      .post("/users")
+      .post(routerUrl)
       .send({ name: "Adán", email: "adan@gmail.com", password: "new" });
     expect(res.status).toBe(400);
     expect(JSON.stringify(res.body)).toContain(
@@ -73,7 +79,7 @@ describe("User API", () => {
       throw new Error("EMAIL_ALREADY_REGISTERED");
     });
     const res = await request(app)
-      .post("/users")
+      .post(routerUrl)
       .send({ ...mockUser, password: "newpassword" });
     expect(res.status).toBe(400);
     expect(res.body.error).toContain("EMAIL_ALREADY_REGISTERED"); // ✅ Make sure the error message is correct
@@ -83,7 +89,7 @@ describe("User API", () => {
     (createUser as jest.Mock).mockImplementation(async (user) => {
       throw new Error("FAILED_TO_HASH_PASSWORD");
     });
-    const res = await request(app).post("/users").send({
+    const res = await request(app).post(routerUrl).send({
       name: "Adán",
       email: "adangonzalez@gmail.com",
       password: "newpassword",

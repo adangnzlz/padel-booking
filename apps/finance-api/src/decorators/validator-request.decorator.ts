@@ -3,18 +3,13 @@ import { validationResult } from "express-validator";
 import { HttpError } from "../errors/http-error";
 
 export const validateRequest = (
-  handler: (req: Request, res: Response, next: NextFunction) => Promise<void> | void
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return next(new HttpError(errors.array(), 400));
-    }
-
-    try {
-      await handler(req, res, next);
-    } catch (error) {
-      next(error);
-    }
-  };
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(new HttpError(errors.array(), 400));
+  }
+  next()
 };

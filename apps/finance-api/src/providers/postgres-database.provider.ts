@@ -17,7 +17,7 @@ export class PostgresDatabaseProvider<T> implements DatabaseProvider<T> {
   }
 
   async read(): Promise<T[]> {
-    const result = await this.pool.query(`SELECT * FROM "${this.table}";`);
+    const result = await this.pool.query(`SELECT id,name,email  FROM "${this.table}";`);
     return result.rows;
   }
 

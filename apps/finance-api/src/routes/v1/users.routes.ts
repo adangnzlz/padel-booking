@@ -1,11 +1,12 @@
-import { Router } from "express";
+import { NextFunction, Router } from "express";
 import asyncHandler from "express-async-handler";
 import { body } from "express-validator";
-import { strictRateLimiter } from "../middlewares/rate-limiter.middleware";
+import { strictRateLimiter } from "../../middlewares/rate-limiter.middleware";
 import {
   createUserController,
   getUsersController,
-} from "../controllers/users.controller";
+} from "../../controllers/users.controller";
+import { validateRequest } from "../../decorators/validator-request.decorator";
 
 const router = Router();
 
@@ -39,7 +40,7 @@ router.post(
       .isLength({ min: 6 })
       .withMessage("Password is required. Min lenght 6 characteres"),
   ],
-  strictRateLimiter,
+  validateRequest,
   asyncHandler(createUserController)
 );
 

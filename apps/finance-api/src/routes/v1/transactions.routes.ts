@@ -4,7 +4,8 @@ import { body, query } from "express-validator";
 import {
   createTransaction,
   getTransactions,
-} from "../controllers/transactions.controller";
+} from "../../controllers/transactions.controller";
+import { validateRequest } from "../../decorators/validator-request.decorator";
 
 const router = Router();
 
@@ -20,6 +21,7 @@ router.get(
       .isEmail()
       .withMessage("Invalid sender email"),
   ],
+  validateRequest,
   asyncHandler(getTransactions)
 );
 
@@ -43,6 +45,7 @@ router.post(
       .isFloat({ gt: 0 })
       .withMessage("Positive amount required"),
   ],
+  validateRequest,
   asyncHandler(createTransaction)
 );
 
