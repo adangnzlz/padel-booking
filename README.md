@@ -42,18 +42,13 @@ To install the project's dependencies, run:
 pnpm install
 ```
 
-### ▶️ **Running the Project**
+### ▶️ **Running the Project api**
 
 To start the server in development mode:
 
 ```bash
+cd apps/finance-api
 pnpm start
-```
-
-Or if the project uses `scripts` in `package.json`, you can run:
-
-```bash
-pnpm run dev
 ```
 
 ### 🧪 **Running Tests**
@@ -61,6 +56,7 @@ pnpm run dev
 To run the tests:
 
 ```bash
+cd apps/finance-api
 pnpm test
 ```
 
@@ -92,6 +88,7 @@ If you need to delete and recreate the database:
 docker stop pgdb
 docker rm pgdb
 docker volume prune -f
+docker rmi postgres ## OPTIONAL
 ```
 
 ### 🔄 **Re-downloading the PostgreSQL Docker Image**
@@ -100,12 +97,6 @@ If you have removed the PostgreSQL image, download it again with:
 
 ```bash
 docker pull postgres
-```
-
-To download a specific version (e.g., PostgreSQL 15):
-
-```bash
-docker pull postgres:15
 ```
 
 ### 🏗 **Creating or Starting the Database**
