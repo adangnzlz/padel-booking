@@ -137,42 +137,7 @@ Make sure the `.env` file is **not versioned** by adding it to `.gitignore`:
 echo ".env" >> .gitignore
 ```
 
-### 📦 **Recreating the `users` Table**
 
-To create the `users` table inside PostgreSQL:
-
-```bash
-docker exec -it pgdb psql -U $PG_USER -d $PG_DB
-```
-
-Then run:
-
-```sql
-CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL
-);
-```
-
-Exit PostgreSQL with `\q`.
-
-### ✅ **Testing the Database Connection**
-
-Restart the application:
-
-```bash
-pnpm start
-```
-
-If using migrations, apply them with:
-
-```bash
-pnpm run migrate
-```
-
----
 
 📌 **By following these steps, we ensure that all developers and deployment environments use the same version of `pnpm`, and have a consistent and easily restorable PostgreSQL database setup.** 🚀
 
