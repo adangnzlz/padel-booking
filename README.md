@@ -80,7 +80,111 @@ corepack prepare pnpm@X.Y.Z --activate
 
 ---
 
-📌 **By following these steps, we ensure that all developers and deployment environments use the same version of `pnpm`, ensuring stability and compatibility within the project.** 🚀
+## 🛠 **Database Setup (PostgreSQL with Docker)**
+
+This project uses a PostgreSQL database running in a Docker container. Follow these steps to set it up or reset it:
+
+### 🗑 **Resetting the Database**
+
+If you need to delete and recreate the database:
+
+```bash
+docker stop pgdb
+docker rm pgdb
+docker volume prune -f
+```
+
+### 🔄 **Re-downloading the PostgreSQL Docker Image**
+
+If you have removed the PostgreSQL image, download it again with:
+
+```bash
+docker pull postgres
+```
+
+To download a specific version (e.g., PostgreSQL 15):
+
+```bash
+docker pull postgres:15
+```
+
+### 🏗 **Creating or Starting the Database**
+
+To avoid conflicts, use this command to **start** the database if it exists, or **create** it if it doesn't:
+
+```bash
+[[ $(docker ps -aq -f name=^pgdb$) ]] && docker start pgdb || (export $(grep -v '^#' .env | xargs) && \
+docker run --name pgdb \
+  -e POSTGRES_USER=$PG_USER \
+  -e POSTGRES_PASSWORD=$PG_PASSWORD \
+  -e POSTGRES_DB=$PG_DB \
+  -p $PG_PORT:$PG_PORT \
+  -v $(pwd)/src/config/init.sql:/docker-entrypoint-initdb.d/init.sql \
+  -d postgres)
+```
+
+This command ensures credentials are **not hardcoded** in `package.json` and avoids container conflicts.
+
+### 🔄 **Updating `.env` File**
+
+Ensure that the `.env` file contains the correct database credentials:
+
+```env
+DATABASE_TYPE=postgres
+API_VERSION=V1
+PORT=3000
+PG_USER=admin
+PG_HOST=localhost
+PG_DB=mydatabase
+PG_PASSWORD=secret
+PG_PORT=5432
+```
+
+Make sure the `.env` file is **not versioned** by adding it to `.gitignore`:
+
+```bash
+echo ".env" >> .gitignore
+```
+
+### 📦 **Recreating the `users` Table**
+
+To create the `users` table inside PostgreSQL:
+
+```bash
+docker exec -it pgdb psql -U $PG_USER -d $PG_DB
+```
+
+Then run:
+
+```sql
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+```
+
+Exit PostgreSQL with `\q`.
+
+### ✅ **Testing the Database Connection**
+
+Restart the application:
+
+```bash
+pnpm start
+```
+
+If using migrations, apply them with:
+
+```bash
+pnpm run migrate
+```
+
+---
+
+📌 **By following these steps, we ensure that all developers and deployment environments use the same version of `pnpm`, and have a consistent and easily restorable PostgreSQL database setup.** 🚀
+
 
 
 Finance Monorepo Example

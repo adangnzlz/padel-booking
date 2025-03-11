@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { HttpError } from "../errors/http-error";
 import { getUserByEmail } from "../services/users.service";
-import { handleValidationErrors } from "../utils/validation";
-import { validateRequest } from "../decorators/validator-request.decorator";
 
 interface Transactions {
   senderEmail: string;

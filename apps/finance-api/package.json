@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:db": "docker start pgdb || docker run --name pgdb -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=secret -e POSTGRES_DB=mydatabase -v $(pwd)/src/config/init.sql:/docker-entrypoint-initdb.d/init.sql -p 5432:5432 -d postgres",
+    "start:db": "[[ $(docker ps -aq -f name=^pgdb$) ]] && docker start pgdb || (export $(grep -v '^#' .env | xargs) && docker run --name pgdb -e POSTGRES_USER=$PG_USER -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_DB=$PG_DB -p $PG_PORT:5432 -v $(pwd)/src/config/init.sql:/docker-entrypoint-initdb.d/init.sql -d postgres)",
     "dev": "nodemon --exec ts-node src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.ts",
     "test": "jest --config=jest.config.js --runInBand"
   },
   "keywords": [],
