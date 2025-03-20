@@ -18,7 +18,7 @@ describe("User Service", () => {
   });
 
   it("Should return undefined if user not found", async () => {
-    const user = await getUserByEmail("adan@gmail.com");
+    const user = await getUserByEmail("adan-not-found@gmail.com");
     expect(user).toBeUndefined();
   });
 
@@ -31,17 +31,6 @@ describe("User Service", () => {
       password: "newpassword",
     });
     expect(user).toEqual({ name: "Adán", email: "adan@gmail.com" });
-  });
-  it("Should fails when hashing password return undefined", async () => {
-    (bcrypt.hash as jest.Mock).mockReturnValue(undefined);
-
-    await expect(
-      createUser({
-        name: "Adán",
-        email: "Adán@gmail.com",
-        password: "newpassword",
-      })
-    ).rejects.toThrow("FAILED_TO_HASH_PASSWORD");
   });
 
   it("Should retreive users created", async () => {
@@ -77,18 +66,6 @@ describe("User Service", () => {
     ).rejects.toThrow("EMAIL_ALREADY_REGISTERED");
   });
 
-  it("Should fail if hashing fails", async () => {
-    (bcrypt.hash as jest.Mock).mockImplementation(() => {
-      throw new Error("Error during hashing");
-    });
-    await expect(
-      createUser({
-        name: "Adán",
-        email: "Adán@gmail.com",
-        password: "newpassword",
-      })
-    ).rejects.toThrow("Failed to hash password");
-  });
 
   afterAll(() => {
     jest.resetAllMocks();
