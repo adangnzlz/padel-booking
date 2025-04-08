@@ -7,7 +7,7 @@ import {
 } from "../src/services/users.service";
 import bcrypt from "bcryptjs";
 
-jest.mock("bcryptjs"); // ✅ Mock bcrypt to avoid real hashing
+jest.mock("bcryptjs"); // Mock bcrypt to avoid real hashing
 
 describe("User Service", () => {
   beforeEach(() => {
@@ -18,7 +18,7 @@ describe("User Service", () => {
   });
 
   it("Should return undefined if user not found", async () => {
-    const user = await getUserByEmail("adan-not-found@gmail.com");
+    const user = await getUserByEmail("adan@gmail.com");
     expect(user).toBeUndefined();
   });
 
@@ -65,7 +65,6 @@ describe("User Service", () => {
       })
     ).rejects.toThrow("EMAIL_ALREADY_REGISTERED");
   });
-
 
   afterAll(() => {
     jest.resetAllMocks();

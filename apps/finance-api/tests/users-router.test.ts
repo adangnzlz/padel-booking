@@ -31,7 +31,7 @@ describe("User API", () => {
     const res = await request(app).get(routerUrl);
     
     expect(res.status).toBe(200);
-    expect(res.body).toEqual(mockUserList); // ✅ Password should be removed
+    expect(res.body).toEqual(mockUserList);
   });
 
   it("should create a user and return 201 status", async () => {
@@ -43,7 +43,7 @@ describe("User API", () => {
       .post(routerUrl)
       .send({ name: "Adán", email: "adan@gmail.com", password: "newpassword" });
     expect(res.status).toBe(201);
-    expect(res.body).toEqual({ message: "User created successfully" }); // ✅ Password should be removed
+    expect(res.body).toEqual({ message: "User created successfully" }); 
   });
 
   it("should fails because invalid email", async () => {
@@ -82,7 +82,7 @@ describe("User API", () => {
       .post(routerUrl)
       .send({ ...mockUser, password: "newpassword" });
     expect(res.status).toBe(400);
-    expect(res.body.error).toContain("EMAIL_ALREADY_REGISTERED"); // ✅ Make sure the error message is correct
+    expect(res.body.error).toContain("EMAIL_ALREADY_REGISTERED"); 
   });
 
   it("should fails because error during hashing password", async () => {

@@ -45,7 +45,12 @@ export class PostgresDatabaseProvider<T> implements DatabaseProvider<T> {
   }
 
   async clear(): Promise<void> {
-    await this.pool.query(`TRUNCATE TABLE "${this.table}" RESTART IDENTITY;`);
+    try {
+      await this.pool.query(`TRUNCATE TABLE "${this.table}" RESTART IDENTITY;`);
+    } catch (error) {
+      console.error('Error clearing table:', error);
+      throw error;
+    }
   }
 
   async close(){
