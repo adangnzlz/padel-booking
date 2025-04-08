@@ -2,39 +2,39 @@ import { Router } from "express";
 import asyncHandler from "express-async-handler";
 import { body, query } from "express-validator";
 import {
-  createTransaction,
-  getTransactions,
+  createTransactionController,
+  getTransactionsController,
 } from "../../controllers/transactions.controller";
 import { validateRequest } from "../../decorators/validator-request.decorator";
-
+  
 const router = Router();
 
 router.get(
   "/",
   [
-    query("senderEmail")
+    query("senderemail")
       .optional()
       .isEmail()
       .withMessage("Invalid sender email"),
-    query("receiverEmail")
+    query("receiveremail")
       .optional()
       .isEmail()
-      .withMessage("Invalid sender email"),
+      .withMessage("Invalid receiver email"),
   ],
   validateRequest,
-  asyncHandler(getTransactions)
+  asyncHandler(getTransactionsController)
 );
 
 router.post(
   "/",
   [
-    body("senderEmail")
+    body("senderemail")
       .notEmpty()
       .withMessage("Sender email required")
       .trim()
       .isEmail()
       .withMessage("Invalid sender email"),
-    body("receiverEmail")
+    body("receiveremail")
       .notEmpty()
       .withMessage("Receiver email required")
       .trim()
@@ -46,7 +46,7 @@ router.post(
       .withMessage("Positive amount required"),
   ],
   validateRequest,
-  asyncHandler(createTransaction)
+  asyncHandler(createTransactionController)
 );
 
 export default router;

@@ -43,9 +43,13 @@ export class FileDatabaseProvider<T> implements DatabaseProvider<T> {
     );
   }
 
-  async getByField(field: keyof T, value: any): Promise<T | undefined> {
+  async getByFields(query: Partial<T>): Promise<T[]> {
     const data = await this.read();
-    return data.find((x) => x[field] == value);
+    return data.filter((item) =>
+      Object.entries(query).every(
+        ([key, value]) => (item as any)[key] === value
+      )
+    );
   }
 
   async clear(): Promise<void> {

@@ -26,12 +26,17 @@ export async function createUser(user: User): Promise<Omit<User, "password">> {
   return userWithoutPassword;
 }
 
-export async function getUserByEmail(email: string): Promise<User | undefined> {
-  return await database.getByField("email", email);
+export async function getUserByEmail(email: string): Promise<Omit<User, "password"> | undefined> {
+  const user = (await database.getByFields({ email }))[0];
+  if (user) {
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
+  }
+  return undefined;
 }
 
 export async function getUsers(): Promise<Omit<User, "password">[]> {
-  return await database.read();
+  return (await database.read()).map(({ password, ...user }) => user);
 }
 
 export async function deleteUser(email: string): Promise<void> {

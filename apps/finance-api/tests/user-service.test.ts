@@ -3,6 +3,7 @@ import {
   createUser,
   getUserByEmail,
   getUsers,
+  deleteUser,
   User,
 } from "../src/services/users.service";
 import bcrypt from "bcryptjs";
@@ -63,6 +64,41 @@ describe("User Service", () => {
         password: "newpassword",
       })
     ).rejects.toThrow("EMAIL_ALREADY_REGISTERED");
+  });
+
+  it("Should throw an error when bcrypt hash fails", async () => {
+    // Mock bcrypt to throw an error
+    (bcrypt.hash as jest.Mock).mockRejectedValue(new Error("Bcrypt error"));
+    
+    // Attempt to create a user which will trigger the hashPassword error
+    await expect(
+      createUser({
+        name: "Error User",
+        email: "error@example.com",
+        password: "password",
+      })
+    ).rejects.toThrow("Failed to hash password");
+  });
+
+  it("Should delete a user successfully", async () => {
+    // Create a user first
+    (bcrypt.hash as jest.Mock).mockReturnValue("verysecurepassword");
+    await createUser({
+      name: "Delete Me",
+      email: "delete@example.com",
+      password: "password",
+    });
+    
+    // Verify user exists
+    let user = await getUserByEmail("delete@example.com");
+    expect(user).toBeDefined();
+    
+    // Delete the user
+    await deleteUser("delete@example.com");
+    
+    // Verify user no longer exists
+    user = await getUserByEmail("delete@example.com");
+    expect(user).toBeUndefined();
   });
 
   afterAll(async () => {

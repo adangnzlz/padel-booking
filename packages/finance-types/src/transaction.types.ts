@@ -8,8 +8,8 @@
 export interface Transaction {
   id: string;
   amount: number;
-  senderEmail: string;
-  receiverEmail: string;
+  senderemail: string;
+  receiveremail: string;
   timestamp: string;
 }
 
@@ -17,7 +17,7 @@ export interface Transaction {
  * Datos necesarios para crear una nueva transacción
  */
 export interface CreateTransactionRequest {
-  senderEmail: string;
-  receiverEmail: string;
+  senderemail: string;
+  receiveremail: string;
   amount: number;
 }

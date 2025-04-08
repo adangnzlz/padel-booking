@@ -15,9 +15,13 @@ export class MemoryDatabaseProvider<T> implements DatabaseProvider<T> {
     this.storage = await this.storage.filter((item) => item[field] !== value);
   }
 
-  async getByField(field: keyof T, value: any): Promise<T | undefined> {
+  async getByFields(query: Partial<T>): Promise<T[]> {
     const data = await this.read();
-    return data.find((item) => item[field] === value);
+    return data.filter((item) =>
+      Object.entries(query).every(
+        ([key, value]) => item[key as keyof T] === value
+      )
+    );
   }
 
   async clear(): Promise<void> {

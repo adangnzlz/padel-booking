@@ -8,13 +8,13 @@ const transactionsService = {
   /**
    * Get transactions with optional filtering by sender or receiver email
    */
-  async getTransactions(senderEmail?: string, receiverEmail?: string): Promise<Transaction[]> {
+  async getTransactions(senderemail?: string, receiveremail?: string): Promise<Transaction[]> {
     let url = `${API_BASE_URL}/transactions`;
     
     // Add query parameters if provided
     const params = new URLSearchParams();
-    if (senderEmail) params.append('senderEmail', senderEmail);
-    if (receiverEmail) params.append('receiverEmail', receiverEmail);
+    if (senderemail) params.append('senderemail', senderemail);
+    if (receiveremail) params.append('receiveremail', receiveremail);
     
     const queryString = params.toString();
     if (queryString) url += `?${queryString}`;

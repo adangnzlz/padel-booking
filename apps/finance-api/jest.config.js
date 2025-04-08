@@ -9,6 +9,7 @@ module.exports = {
   coverageReporters: ["json", "lcov", "text", "clover"],
   coveragePathIgnorePatterns: [
     "/node_modules/",
+    "/src/index.ts",
     "/src/errors/",
     "/src/providers/",
     "/src/utils/",

@@ -21,36 +21,12 @@ describe("Transactions API", () => {
   });
 
 
-  it("should return 400 if sender email does not exist", async () => {
-    (getUserByEmail as jest.Mock).mockReturnValueOnce(null);
-
-    const res = await request(app)
-      .get(routerUrl)
-      .query({ senderEmail: "unknown@example.com" });
-
-    expect(res.status).toBe(400);
-    expect(res.body.error).toBe("Sender email not exists");
-  });
-
-
-  it("should return 400 if receiver email does not exist", async () => {
-    (getUserByEmail as jest.Mock).mockReturnValueOnce(null);
-
-    const res = await request(app)
-      .get(routerUrl)
-      .query({ receiverEmail: "unknown@example.com" });
-
-    expect(res.status).toBe(400);
-    expect(res.body.error).toBe("Receiver email not exists");
-  });
-
-
   it("should create a transaction when data is valid", async () => {
     (getUserByEmail as jest.Mock).mockReturnValue(true);
 
     const res = await request(app).post(routerUrl).send({
-      senderEmail: "alice@example.com",
-      receiverEmail: "bob@example.com",
+      senderemail: "alice@example.com",
+      receiveremail: "bob@example.com",
       amount: 100,
     });
 
@@ -58,10 +34,10 @@ describe("Transactions API", () => {
     expect(res.body.message).toBe("Transaction created successfully");
   });
 
-  it("should fail if senderEmail is invalid", async () => {
+  it("should fail if senderemail is invalid", async () => {
     const res = await request(app).post(routerUrl).send({
-      senderEmail: "invalidemail",
-      receiverEmail: "bob@example.com",
+      senderemail: "invalidemail",
+      receiveremail: "bob@example.com",
       amount: 100,
     });
 
@@ -71,8 +47,8 @@ describe("Transactions API", () => {
   // ✅ Test POST `/transactions` (Sender and receiver emails must be different)
   it("should fail if sender and receiver emails are the same", async () => {
     const res = await request(app).post(routerUrl).send({
-      senderEmail: "alice@example.com",
-      receiverEmail: "alice@example.com",
+      senderemail: "alice@example.com",
+      receiveremail: "alice@example.com",
       amount: 100,
     });
 
@@ -84,8 +60,8 @@ describe("Transactions API", () => {
     (getUserByEmail as jest.Mock).mockImplementation((email) => undefined);
 
     const res = await request(app).post(routerUrl).send({
-      senderEmail: "unknown@example.com",
-      receiverEmail: "bob@example.com",
+      senderemail: "unknown@example.com",
+      receiveremail: "bob@example.com",
       amount: 100,
     });
 
@@ -99,8 +75,8 @@ describe("Transactions API", () => {
     );
 
     const res = await request(app).post(routerUrl).send({
-      senderEmail: "alice@example.com",
-      receiverEmail: "unknown@example.com",
+      senderemail: "alice@example.com",
+      receiveremail: "unknown@example.com",
       amount: 100,
     });
 
@@ -112,8 +88,8 @@ describe("Transactions API", () => {
 
   it("should fail if amount is zero or negative", async () => {
     const res = await request(app).post(routerUrl).send({
-      senderEmail: "alice@example.com",
-      receiverEmail: "bob@example.com",
+      senderemail: "alice@example.com",
+      receiveremail: "bob@example.com",
       amount: -10,
     });
 

@@ -1,9 +1,10 @@
 import { NextFunction, Router } from "express";
 import asyncHandler from "express-async-handler";
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import { strictRateLimiter } from "../../middlewares/rate-limiter.middleware";
 import {
   createUserController,
+  getUserByEmailController,
   getUsersController,
 } from "../../controllers/users.controller";
 import { validateRequest } from "../../decorators/validator-request.decorator";
@@ -12,16 +13,12 @@ const router = Router();
 
 router.get("/", asyncHandler(getUsersController));
 
-// router.get(
-//   "/:email",
-//   [param("email").isEmail().withMessage("Invalid email format")],
-//   asyncHandler(async (req: Request, res: Response): Promise<void> => {
-//     const email = req.params.email;
-//     const user = getUserByEmail(email);
-//     if (!user) throw new HttpError("User not found", 404);
-//     res.status(200).json(user);
-//   })
-// );
+router.get(
+  "/:email",
+  [param("email").isEmail().withMessage("Invalid email format")],
+  validateRequest,
+  asyncHandler(getUserByEmailController)
+);
 
 router.post(
   "/",

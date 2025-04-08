@@ -11,9 +11,7 @@ export class PostgresDatabaseProvider<T> implements DatabaseProvider<T> {
   }
 
   async read(): Promise<T[]> {
-    const result = await this.pool.query(
-      `SELECT id,name,email  FROM "${this.table}";`
-    );
+    const result = await this.pool.query(`SELECT *  FROM "${this.table}";`);
     return result.rows;
   }
 
@@ -37,12 +35,19 @@ export class PostgresDatabaseProvider<T> implements DatabaseProvider<T> {
     await this.pool.query(query, [value]);
   }
 
-  async getByField(field: keyof T, value: any): Promise<T | undefined> {
-    const query = `SELECT * FROM "${this.table}" WHERE "${
-      field as string
-    }" = $1 LIMIT 1`;
-    const result = await this.pool.query(query, [value]);
-    return result.rows[0] || undefined;
+  async getByFields(query: Partial<T>): Promise<T[]> {
+    const keys = Object.keys(query);
+    const values = Object.values(query);
+
+    if (keys.length === 0) return [];
+
+    const conditions = keys
+      .map((key, i) => `"${key}" = $${i + 1}`)
+      .join(" AND ");
+    const sql = `SELECT * FROM "${this.table}" WHERE ${conditions}`;
+
+    const result = await this.pool.query(sql, values);
+    return result.rows;
   }
 
   async clear(): Promise<void> {

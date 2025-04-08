@@ -1,6 +1,6 @@
 import { validationResult } from "express-validator";
 import { HttpError } from "../errors/http-error";
-import { createUser, getUsers, User } from "../services/users.service";
+import { createUser, getUsers, getUserByEmail, User } from "../services/users.service";
 import { Request, Response } from "express";
 import { validateRequest } from "../decorators/validator-request.decorator";
 
@@ -22,4 +22,15 @@ export const createUserController = async (req: Request, res: Response) => {
   }
 
   res.status(201).json({ message: "User created successfully" });
+};
+
+export const getUserByEmailController = async (req: Request, res: Response) => {
+  const email = req.params.email;
+  const user = await getUserByEmail(email);
+  
+  if (!user) {
+    throw new HttpError("User not found", 404);
+  }
+  
+  res.status(200).json(user);
 };
