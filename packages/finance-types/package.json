@@ -1,0 +1,16 @@
+{
+  "name": "@finance/types",
+  "version": "1.0.0",
+  "description": "Tipos compartidos para las aplicaciones de finanzas",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "rimraf": "^5.0.0"
+  }
+}

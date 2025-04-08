@@ -1,14 +1,9 @@
 import { Request, Response } from "express";
 import { HttpError } from "../errors/http-error";
 import { getUserByEmail } from "../services/users.service";
+import { Transaction } from "@finance/types";
 
-interface Transactions {
-  senderEmail: string;
-  receiverEmail: string;
-  amount: number;
-}
-
-const transactions: Transactions[] = [];
+const transactions: Transaction[] = [];
 
 export const getTransactions = (req: Request, res: Response) => {
   const senderEmail = req.query.senderEmail
@@ -45,6 +40,6 @@ export const createTransaction = async (
   if (!getUserByEmail(receiverEmail))
     throw new HttpError("Receiver email not exists", 400);
 
-  transactions.push({ senderEmail, receiverEmail, amount });
+  transactions.push({ senderEmail, receiverEmail, amount});
   res.status(201).json({ message: "Transaction created successfully" });
 };
