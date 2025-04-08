@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { logger } from "../config/winston";
+import { logger } from "../../config/winston";
 import { HttpError } from "../errors/http-error";
 
 export function httpErrorInterceptor() {

@@ -3,12 +3,13 @@ import cors from "cors";
 import helmet from "helmet";
 import compression = require("compression");
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
+
 
 import usersRoutes from "./routes/v1/users.routes";
 import transactionsRoutes from "./routes/v1/transactions.routes";
 import { httpRequestLogger } from "./middlewares/http-request-logger.middleware";
-import { logger } from "./config/winston";
+import { logger } from "../config/winston";
 import { httpErrorInterceptor } from "./middlewares/http-error-interceptor.middleware";
 import {
   apiRateLimiter,

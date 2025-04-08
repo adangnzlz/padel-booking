@@ -1,7 +1,6 @@
 import { DatabaseProvider } from "./database.provider";
 
 export class MemoryDatabaseProvider<T> implements DatabaseProvider<T> {
-
   private storage: T[] = [];
 
   async read(): Promise<T[]> {
@@ -10,6 +9,10 @@ export class MemoryDatabaseProvider<T> implements DatabaseProvider<T> {
 
   async create(data: T): Promise<void> {
     this.storage.push(data);
+  }
+
+  async deleteByField(field: keyof T, value: any): Promise<void> {
+    this.storage = await this.storage.filter((item) => item[field] !== value);
   }
 
   async getByField(field: keyof T, value: any): Promise<T | undefined> {

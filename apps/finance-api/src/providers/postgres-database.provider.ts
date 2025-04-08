@@ -6,18 +6,14 @@ export class PostgresDatabaseProvider<T> implements DatabaseProvider<T> {
   private table: string;
 
   constructor(tableName: string) {
-    this.pool = new Pool({
-      user: process.env.PG_USER,
-      host: process.env.PG_HOST,
-      database: process.env.PG_DB,
-      password: process.env.PG_PASSWORD,
-      port: Number(process.env.PG_PORT),
-    });
+    this.pool = new Pool({ connectionString: process.env.DATABASE_URL });
     this.table = tableName;
   }
 
   async read(): Promise<T[]> {
-    const result = await this.pool.query(`SELECT id,name,email  FROM "${this.table}";`);
+    const result = await this.pool.query(
+      `SELECT id,name,email  FROM "${this.table}";`
+    );
     return result.rows;
   }
 
@@ -36,6 +32,11 @@ export class PostgresDatabaseProvider<T> implements DatabaseProvider<T> {
     await this.pool.query(query, values);
   }
 
+  async deleteByField(field: keyof T, value: any): Promise<void> {
+    const query = `DELETE FROM "${this.table}" WHERE "${field as string}" = $1`;
+    await this.pool.query(query, [value]);
+  }
+
   async getByField(field: keyof T, value: any): Promise<T | undefined> {
     const query = `SELECT * FROM "${this.table}" WHERE "${
       field as string
@@ -48,12 +49,12 @@ export class PostgresDatabaseProvider<T> implements DatabaseProvider<T> {
     try {
       await this.pool.query(`TRUNCATE TABLE "${this.table}" RESTART IDENTITY;`);
     } catch (error) {
-      console.error('Error clearing table:', error);
+      console.error("Error clearing table:", error);
       throw error;
     }
   }
 
-  async close(){
+  async close() {
     this.pool.end();
   }
 }

@@ -33,6 +33,16 @@ export class FileDatabaseProvider<T> implements DatabaseProvider<T> {
     }
   }
 
+  async deleteByField(field: keyof T, value: any): Promise<void> {
+    const data = await this.read();
+    const filteredData = data.filter((x) => x[field] !== value);
+    await fs.writeFile(
+      this.filePath,
+      JSON.stringify(filteredData, null, 2),
+      "utf8"
+    );
+  }
+
   async getByField(field: keyof T, value: any): Promise<T | undefined> {
     const data = await this.read();
     return data.find((x) => x[field] == value);
