@@ -9,7 +9,7 @@ INSERT INTO users (name, email, password) VALUES
   ('Carol White', 'carol@example.com', 'hashedpassword3');
 
 -- Insertar transacciones mock usando emails
-INSERT INTO transactions (senderEmail, receiverEmail, amount) VALUES
+INSERT INTO transactions (senderemail, receiveremail, amount) VALUES
   ('alice@example.com', 'bob@example.com', 150.50),
   ('bob@example.com', 'carol@example.com', 45.00),
   ('carol@example.com', 'alice@example.com', 20.25),

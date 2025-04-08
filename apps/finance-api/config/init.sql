@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS transactions (
     id SERIAL PRIMARY KEY,
-    senderEmail VARCHAR(100) NOT NULL,
-    receiverEmail VARCHAR(100) NOT NULL,
+    senderemail VARCHAR(100) NOT NULL,
+    receiveremail VARCHAR(100) NOT NULL,
     amount DECIMAL(10, 2) NOT NULL
 );
