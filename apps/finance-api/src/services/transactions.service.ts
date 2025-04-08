@@ -12,7 +12,7 @@ export async function getTransactions(
   if (filters?.senderemail) obj.senderemail = String(filters.senderemail);
   if (filters?.receiveremail) obj.receiveremail = String(filters.receiveremail);
 
-  if (!filters || Object.keys(filters).length === 0) {
+  if (!obj || Object.keys(obj).length === 0) {
     return await database.read();
   }
   return await database.getByFields(obj);

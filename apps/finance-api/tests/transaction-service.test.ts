@@ -82,7 +82,7 @@ describe("Transaction Service", () => {
       amount: 200,
     });
 
-    const transactions = await getTransactions();
+    const transactions = await getTransactions({});
     expect(transactions.length).toBe(2);
     const transactions2 = await getTransactions({
       senderemail: "sender@example.com",
