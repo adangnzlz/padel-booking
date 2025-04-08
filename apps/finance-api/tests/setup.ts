@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
-jest.mock("../src/config/winston", () => ({
+jest.mock("../config/winston", () => ({
   logger: {
     info: jest.fn(),
     warn: jest.fn(),

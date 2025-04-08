@@ -6,15 +6,14 @@ import {
   User,
 } from "../src/services/users.service";
 import bcrypt from "bcryptjs";
-
 jest.mock("bcryptjs"); // Mock bcrypt to avoid real hashing
 
 describe("User Service", () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
     const database = DatabaseFactory.get("users");
-    database.clear();
+    await database.clear();
   });
 
   it("Should return undefined if user not found", async () => {
@@ -66,12 +65,12 @@ describe("User Service", () => {
     ).rejects.toThrow("EMAIL_ALREADY_REGISTERED");
   });
 
-  afterAll(() => {
+  afterAll(async () => {
     jest.resetAllMocks();
     const database = DatabaseFactory.get("users");
-    database.clear();
+    await database.clear();
     if (database.close) {
-      database.close();
+      await database.close();
     }
   });
 });

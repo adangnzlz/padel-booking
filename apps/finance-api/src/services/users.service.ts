@@ -33,3 +33,7 @@ export async function getUserByEmail(email: string): Promise<User | undefined> {
 export async function getUsers(): Promise<Omit<User, "password">[]> {
   return await database.read();
 }
+
+export async function deleteUser(email: string): Promise<void> {
+  await database.deleteByField("email", email);
+}
