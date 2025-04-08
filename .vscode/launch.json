@@ -7,7 +7,7 @@
         "name": "Debug Finance API",
         "cwd": "${workspaceFolder}/apps/finance-api", 
         "runtimeExecutable": "pnpm",
-        "runtimeArgs": ["run", "dev"],
+        "runtimeArgs": [ "start"],
         "console": "integratedTerminal",
         "restart": true,
         "internalConsoleOptions": "neverOpen",
