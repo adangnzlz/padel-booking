@@ -1,5 +1,5 @@
 import { API_BASE_URL, commonHeaders, handleResponse } from './api-config';
-import { CreateUserRequest, User } from './types';
+import { CreateUserRequest, User } from '@finance/types';
 
 /**
  * Users service for interacting with the finance-api users endpoints
