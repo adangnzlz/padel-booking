@@ -130,3 +130,4 @@ dist
 .pnp.*
 apps/finance-api/.env.test
 apps/finance-api/.env.dev
+.turbo
