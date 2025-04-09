@@ -1,11 +1,6 @@
 import bcrypt from "bcryptjs";
 import { DatabaseFactory } from "../providers/database.factory";
-
-export interface User {
-  name: string;
-  email: string;
-  password: string;
-}
+import { CreateUserRequest, User } from "@finance/types";
 
 const database = DatabaseFactory.get<User>("users");
 
@@ -17,16 +12,19 @@ async function hashPassword(password: string): Promise<string> {
   }
 }
 
-export async function createUser(user: User): Promise<Omit<User, "password">> {
+export async function createUser(
+  user: CreateUserRequest
+): Promise<Omit<User, "password">> {
   const existingUser = await getUserByEmail(user.email);
   if (existingUser) throw new Error("EMAIL_ALREADY_REGISTERED");
   const hashedPassword = await hashPassword(user.password);
-  await database.create({ ...user, password: hashedPassword });
-  const { password, ...userWithoutPassword } = user;
-  return userWithoutPassword;
+  const { password, ...newUser } = await database.create({ ...user, password: hashedPassword });
+  return newUser;
 }
 
-export async function getUserByEmail(email: string): Promise<Omit<User, "password"> | undefined> {
+export async function getUserByEmail(
+  email: string
+): Promise<Omit<User, "password"> | undefined> {
   const user = (await database.getByFields({ email }))[0];
   if (user) {
     const { password, ...userWithoutPassword } = user;

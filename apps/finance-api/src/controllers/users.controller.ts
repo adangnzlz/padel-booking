@@ -1,8 +1,12 @@
 import { validationResult } from "express-validator";
 import { HttpError } from "../errors/http-error";
-import { createUser, getUsers, getUserByEmail, User } from "../services/users.service";
+import {
+  createUser,
+  getUsers,
+  getUserByEmail,
+} from "../services/users.service";
 import { Request, Response } from "express";
-import { validateRequest } from "../decorators/validator-request.decorator";
+import { User } from "@finance/types";
 
 export const getUsersController = async (req: Request, res: Response) => {
   const response: Omit<User, "password">[] = await getUsers();
@@ -27,10 +31,10 @@ export const createUserController = async (req: Request, res: Response) => {
 export const getUserByEmailController = async (req: Request, res: Response) => {
   const email = req.params.email;
   const user = await getUserByEmail(email);
-  
+
   if (!user) {
     throw new HttpError("User not found", 404);
   }
-  
+
   res.status(200).json(user);
 };

@@ -4,7 +4,6 @@ import {
   getUserByEmail,
   getUsers,
   deleteUser,
-  User,
 } from "../src/services/users.service";
 import bcrypt from "bcryptjs";
 jest.mock("bcryptjs"); // Mock bcrypt to avoid real hashing
@@ -30,7 +29,8 @@ describe("User Service", () => {
       email: "adan@gmail.com",
       password: "newpassword",
     });
-    expect(user).toEqual({ name: "Adán", email: "adan@gmail.com" });
+    expect(user.name).toEqual("Adán");
+    expect(user.email).toEqual("adan@gmail.com");
   });
 
   it("Should retreive users created", async () => {

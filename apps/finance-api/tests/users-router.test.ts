@@ -4,8 +4,8 @@ import {
   createUser,
   getUserByEmail,
   getUsers,
-  User,
 } from "../src/services/users.service";
+import { User } from "@finance/types";
 
 // Mock the services
 jest.mock("../src/services/users.service");
