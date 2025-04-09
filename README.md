@@ -1,6 +1,5 @@
 # finance-monorepo
 
-
 # 📌 Finance API
 
 ## 🚀 Project Setup and Startup
@@ -104,14 +103,8 @@ docker pull postgres
 To avoid conflicts, use this command to **start** the database if it exists, or **create** it if it doesn't:
 
 ```bash
-[[ $(docker ps -aq -f name=^pgdb$) ]] && docker start pgdb || (export $(grep -v '^#' .env | xargs) && \
-docker run --name pgdb \
-  -e POSTGRES_USER=$PG_USER \
-  -e POSTGRES_PASSWORD=$PG_PASSWORD \
-  -e POSTGRES_DB=$PG_DB \
-  -p $PG_PORT:$PG_PORT \
-  -v $(pwd)/src/config/init.sql:/docker-entrypoint-initdb.d/init.sql \
-  -d postgres)
+pnpm db:start
+pnpm db:seed
 ```
 
 This command ensures credentials are **not hardcoded** in `package.json` and avoids container conflicts.
@@ -153,5 +146,16 @@ NodeJS with
 - Cors
 - Helmet
 - express validator
-- Rate limits
-- Test (supertest, jest)
+- Rate limiter
+- Test (supertest, jest) 100% Coverage
+- Database provider with memory, file and postgres options
+- PostgreSQL (Docker) & scripts to initialize and seed the database
+
+SPA with
+
+- React
+- Vite
+- Tailwind
+- React Router
+- React Feather Icons
+- React Hooks
