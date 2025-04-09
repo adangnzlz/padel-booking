@@ -33,3 +33,5 @@ dist-ssr
 
 # Netlify
 .netlify
+
+.env.production
