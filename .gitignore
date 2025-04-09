@@ -132,3 +132,5 @@ apps/finance-api/.env.test
 apps/finance-api/.env.dev
 .turbo
 apps/finance-api/data
+# Local Netlify folder
+.netlify
