@@ -1,0 +1,1 @@
+cd apps/finance-api && pnpm test
