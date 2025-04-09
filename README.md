@@ -136,9 +136,19 @@ echo ".env" >> .gitignore
 
 
 
-Finance Monorepo Example
+Finance Monorepo Personal Example for testing purposes
 
-NodeJS with 
+## Turbo repo
+
+Monorepo apps/libs index:
+
+- Apps
+  - finance-api
+  - finance-web-app
+- Packages
+  - finance-types
+
+### NodeJS with 
 
 - Winston
 - Loggin middlewares (JSON, durations, status code...)
@@ -151,7 +161,7 @@ NodeJS with
 - Database provider with memory, file and postgres options
 - PostgreSQL (Docker) & scripts to initialize and seed the database
 
-SPA with
+### SPA with
 
 - React
 - Vite
@@ -159,3 +169,6 @@ SPA with
 - React Router
 - React Feather Icons
 - React Hooks
+- Netlify (for auto deployment on push)
+
+

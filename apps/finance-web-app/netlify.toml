@@ -1,6 +1,7 @@
 [build]
   command = "pnpm run build"
   publish = "apps/finance-web-app/dist"
+  ignore = "git log -1 --pretty=%B | grep -q '\\[skip deploy\\]'"
 
 [dev]
   command = "pnpm run dev"
