@@ -3,8 +3,6 @@ import cors from "cors";
 import helmet from "helmet";
 import compression = require("compression");
 import dotenv from "dotenv";
-dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
-
 
 import usersRoutes from "./routes/v1/users.routes";
 import transactionsRoutes from "./routes/v1/transactions.routes";
@@ -15,6 +13,13 @@ import {
   apiRateLimiter,
   strictRateLimiter,
 } from "./middlewares/rate-limiter.middleware";
+
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config({ path: `.env.${process.env.NODE_ENV || "dev"}` });
+}
+logger.info(`NODE_ENV: ${process.env.NODE_ENV}`);
+logger.info(`PORT: ${process.env.PORT}`);
+logger.info(`API_VERSION: ${process.env.API_VERSION}`);
 
 const version = process.env.API_VERSION;
 const app = express();

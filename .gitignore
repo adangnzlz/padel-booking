@@ -128,8 +128,9 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-apps/finance-api/.env.test
-apps/finance-api/.env.dev
+apps/finance-api/.env.*
+!apps/finance-api/.env.test
+!apps/finance-api/.env.dev
 .turbo
 apps/finance-api/data
 # Local Netlify folder

@@ -115,13 +115,9 @@ Ensure that the `.env` file contains the correct database credentials:
 
 ```env
 DATABASE_TYPE=postgres
-API_VERSION=V1
+API_VERSION=/api/v1
 PORT=3000
-PG_USER=admin
-PG_HOST=localhost
-PG_DB=mydatabase
-PG_PASSWORD=secret
-PG_PORT=5432
+DATABASE_URL=postgresql://[username]:[password]@[host]:[port]/[database]
 ```
 
 Make sure the `.env` file is **not versioned** by adding it to `.gitignore`:
@@ -171,6 +167,14 @@ Monorepo apps/libs index:
 - React Hooks
 - Netlify (for auto deployment on push)
 
+
+
+### Infrastructure (GCP & Supabase)
+
+- Cloud Run
+- Secret Manager
+- Docker (Artifacts registry GCP)
+- Supabase (PostgreSQL)
 
 
 
