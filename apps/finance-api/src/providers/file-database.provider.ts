@@ -17,7 +17,7 @@ export class FileDatabaseProvider<T> implements DatabaseProvider<T> {
       return data ? JSON.parse(data) : [];
     } catch (error: any) {
       if (error.code === "ENOENT") {
-        return []; // Si el archivo no existe, devuelve un array vacío
+        return []; // If the file doesn't exist, return an empty array
       }
       throw new Error("Error reading file database");
     }

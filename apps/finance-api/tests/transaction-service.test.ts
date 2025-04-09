@@ -2,13 +2,13 @@ import { DatabaseFactory } from "../src/providers/database.factory";
 import { getUserByEmail } from "../src/services/users.service";
 import { CreateTransactionRequest } from "@finance/types";
 
-// Estas serían las funciones que implementarías en el servicio de transacciones
+// These would be the functions you would implement in the transaction service
 import {
   createTransaction,
   getTransactions,
 } from "../src/services/transactions.service";
 
-// Mockear el servicio de usuarios para evitar dependencias reales
+// Mock the user service to avoid real dependencies
 jest.mock("../src/services/users.service");
 
 describe("Transaction Service", () => {
@@ -18,9 +18,9 @@ describe("Transaction Service", () => {
     const database = DatabaseFactory.get("transactions");
     await database.clear();
 
-    // Configurar el mock de getUserByEmail para que devuelva true por defecto
+    // Configure the mock of getUserByEmail to return true by default
     (getUserByEmail as jest.Mock).mockImplementation((email: string) => {
-      // Simulamos que estos emails existen
+      // Simulate that these emails exist
       return email === "sender@example.com" || email === "receiver@example.com"
         ? { name: "Test User", email }
         : undefined;
@@ -47,7 +47,7 @@ describe("Transaction Service", () => {
 
   it("Should retrieve transactions filtered by sender email", async () => {
     (getUserByEmail as jest.Mock).mockReturnValue(true);
-    // Crear algunas transacciones para probar
+    // Create some transactions to test
     await createTransaction({
       senderemail: "sender@example.com",
       receiveremail: "receiver@example.com",
@@ -69,7 +69,7 @@ describe("Transaction Service", () => {
 
   it("Should retrieve all transactions when no filters ", async () => {
     (getUserByEmail as jest.Mock).mockReturnValue(true);
-    // Crear algunas transacciones para probar
+    // Create some transactions to test
     await createTransaction({
       senderemail: "sender@example.com",
       receiveremail: "receiver@example.com",
@@ -126,7 +126,7 @@ describe("Transaction Service", () => {
   });
 
   it("Should fail when trying to create a transaction with non-existing sender", async () => {
-    // Configurar el mock para que devuelva undefined para este email
+    // Configure the mock to return undefined for this email
     (getUserByEmail as jest.Mock).mockImplementation((email: string) =>
       email === "receiver@example.com"
         ? { name: "Test User", email }
@@ -143,7 +143,7 @@ describe("Transaction Service", () => {
   });
 
   it("Should fail when trying to create a transaction with non-existing receiver", async () => {
-    // Configurar el mock para que devuelva undefined para este email
+    // Configure the mock to return undefined for this email
     (getUserByEmail as jest.Mock).mockImplementation((email: string) =>
       email === "sender@example.com" ? { name: "Test User", email } : undefined
     );
