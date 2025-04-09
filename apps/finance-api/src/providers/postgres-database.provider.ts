@@ -15,19 +15,20 @@ export class PostgresDatabaseProvider<T> implements DatabaseProvider<T> {
     return result.rows;
   }
 
-  async create(data: T): Promise<void> {
+  async create(data: T): Promise<T> {
     const dataObject = data as Record<string, any>;
     const keys = Object.keys(dataObject);
     const values = Object.values(dataObject);
-    const paramPlaceholders = keys
-      .map((_, index) => `$${index + 1}`)
-      .join(", ");
+    const paramPlaceholders = keys.map((_, i) => `$${i + 1}`).join(", ");
 
-    const query = `INSERT INTO "${this.table}" (${keys
-      .map((k) => `"${k}"`)
-      .join(", ")}) VALUES (${paramPlaceholders})`;
+    const query = `
+      INSERT INTO "${this.table}" (${keys.map((k) => `"${k}"`).join(", ")})
+      VALUES (${paramPlaceholders})
+      RETURNING *
+    `;
 
-    await this.pool.query(query, values);
+    const result = await this.pool.query(query, values);
+    return result.rows[0];
   }
 
   async deleteByField(field: keyof T, value: any): Promise<void> {

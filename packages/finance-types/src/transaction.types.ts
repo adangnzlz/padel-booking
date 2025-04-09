@@ -1,21 +1,14 @@
-/**
- * Tipos relacionados con transacciones financieras
- */
+export interface TransactionFilters {
+  senderemail?: string;
+  receiveremail?: string;
+}
 
-/**
- * Representa una transacción financiera completa
- */
 export interface Transaction {
   id: string;
   amount: number;
   senderemail: string;
   receiveremail: string;
-  timestamp: string;
 }
-
-/**
- * Datos necesarios para crear una nueva transacción
- */
 export interface CreateTransactionRequest {
   senderemail: string;
   receiveremail: string;

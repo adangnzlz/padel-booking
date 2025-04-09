@@ -7,8 +7,9 @@ export class MemoryDatabaseProvider<T> implements DatabaseProvider<T> {
     return this.storage;
   }
 
-  async create(data: T): Promise<void> {
+  async create(data: T): Promise<T> {
     this.storage.push(data);
+    return data;
   }
 
   async deleteByField(field: keyof T, value: any): Promise<void> {

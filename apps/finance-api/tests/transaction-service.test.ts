@@ -1,6 +1,6 @@
 import { DatabaseFactory } from "../src/providers/database.factory";
 import { getUserByEmail } from "../src/services/users.service";
-import { Transaction } from "@finance/types";
+import { CreateTransactionRequest } from "@finance/types";
 
 // Estas serían las funciones que implementarías en el servicio de transacciones
 import {
@@ -33,7 +33,7 @@ describe("Transaction Service", () => {
   });
 
   it("Should create a transaction successfully", async () => {
-    const transaction: Transaction = {
+    const transaction: CreateTransactionRequest = {
       senderemail: "sender@example.com",
       receiveremail: "receiver@example.com",
       amount: 100,

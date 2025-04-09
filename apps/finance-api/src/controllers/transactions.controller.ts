@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { HttpError } from "../errors/http-error";
-import { Transaction, TransactionFilters } from "@finance/types";
 import {
   getTransactions,
   createTransaction,

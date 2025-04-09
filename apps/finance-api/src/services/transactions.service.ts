@@ -1,7 +1,11 @@
 import { DatabaseFactory } from "../providers/database.factory";
 import { getUserByEmail } from "./users.service";
-import { Transaction, TransactionFilters } from "@finance/types";
 import { HttpError } from "../errors/http-error";
+import {
+  TransactionFilters,
+  Transaction,
+  CreateTransactionRequest,
+} from "@finance/types";
 
 const database = DatabaseFactory.get<Transaction>("transactions");
 
@@ -19,8 +23,8 @@ export async function getTransactions(
 }
 
 export async function createTransaction(
-  transaction: Transaction
-): Promise<Transaction> {
+  transaction: CreateTransactionRequest
+): Promise<CreateTransactionRequest> {
   const { senderemail, receiveremail, amount } = transaction;
 
   if (senderemail === receiveremail)
@@ -32,12 +36,12 @@ export async function createTransaction(
   const receiverExists = await getUserByEmail(receiveremail);
   if (!receiverExists) throw new HttpError("Receiver email not exists", 400);
 
-  const newTransaction = {
+  const newTransaction: CreateTransactionRequest = {
     senderemail,
     receiveremail,
     amount,
   };
-  await database.create(newTransaction);
+  const transactionCreated = await database.create(newTransaction);
 
-  return newTransaction;
+  return {...transactionCreated, amount: Number(transactionCreated.amount)};
 }

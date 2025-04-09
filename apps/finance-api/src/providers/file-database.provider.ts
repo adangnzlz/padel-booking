@@ -23,11 +23,12 @@ export class FileDatabaseProvider<T> implements DatabaseProvider<T> {
     }
   }
 
-  async create(newElement: T): Promise<void> {
+  async create(newElement: T): Promise<T> {
     try {
       const data = await this.read(); // 🔹 Leemos los datos actuales
       data.push(newElement); // 🔹 Agregamos el nuevo elemento
       await fs.writeFile(this.filePath, JSON.stringify(data, null, 2), "utf8"); // 🔹 Sobreescribimos con el JSON formateado
+      return newElement;
     } catch (error) {
       throw new Error("Error writing to file database");
     }
