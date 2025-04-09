@@ -135,8 +135,8 @@ echo ".env" >> .gitignore
 📌 **By following these steps, we ensure that all developers and deployment environments use the same version of `pnpm`, and have a consistent and easily restorable PostgreSQL database setup.** 🚀
 
 
+This personal project is a sandbox for testing out technologies and exploring best practices. It does not aim to provide the optimal solution for the specific problem implemented, but rather to serve as a learning and experimentation platform.
 
-Finance Monorepo Personal Example for testing purposes
 
 ## Turbo repo
 
@@ -170,5 +170,6 @@ Monorepo apps/libs index:
 - React Feather Icons
 - React Hooks
 - Netlify (for auto deployment on push)
+
 
 
