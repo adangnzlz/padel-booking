@@ -9,6 +9,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:14
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: finance_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: financepassword
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      NODE_ENV: test
+      DATABASE_TYPE: postgres
+      API_VERSION: /api/v1
+      PORT: 3030
+      DATABASE_URL: postgres://postgres:financepassword@localhost:5432/finance_test
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -32,6 +54,16 @@ jobs:
 
       - name: Build monorepo
         run: pnpm build
+
+      - name: Wait for DB to be ready
+        run: |
+          echo "⏳ Waiting for Postgres..."
+          until pg_isready -h localhost -p 5432; do sleep 1; done
+          echo "✅ Postgres is ready"
+
+      - name: Seed test DB (init.sql)
+        run: |
+          psql $DATABASE_URL -f apps/finance-api/config/init.sql
 
       - name: Run tests (only for finance-api)
         run: pnpm --filter=finance-api test
