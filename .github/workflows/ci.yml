@@ -63,7 +63,7 @@ jobs:
 
       - name: Seed test DB (init.sql)
         run: |
-          psql $DATABASE_URL -f apps/finance-api/config/init.sql
+          psql $DATABASE_URL -f apps/finance-api/dbinit/init.sql
 
       - name: Run tests (only for finance-api)
         run: pnpm --filter=finance-api test
