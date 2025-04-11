@@ -91,3 +91,32 @@ resource "google_cloud_run_service_iam_member" "invoker" {
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
+
+
+# 4. IAM para permitir despliegue de GitHub Actions
+resource "google_service_account" "github_actions" {
+  account_id   = "github-actions-deployer"
+  display_name = "GitHub Actions Deployer"
+  description  = "Service account for deploying finance-api from GitHub Actions"
+}
+
+# Permiso para desplegar en Cloud Run
+resource "google_project_iam_member" "run_admin" {
+  project = var.project_id
+  role    = "roles/run.admin"
+  member  = "serviceAccount:${google_service_account.github_actions.email}"
+}
+
+# Permiso para escribir en Artifact Registry
+resource "google_project_iam_member" "artifact_registry_writer" {
+  project = var.project_id
+  role    = "roles/artifactregistry.writer"
+  member  = "serviceAccount:${google_service_account.github_actions.email}"
+}
+
+# Permiso para actuar como service account
+resource "google_project_iam_member" "service_account_user" {
+  project = var.project_id
+  role    = "roles/iam.serviceAccountUser"
+  member  = "serviceAccount:${google_service_account.github_actions.email}"
+}
