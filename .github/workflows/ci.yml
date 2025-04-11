@@ -1,4 +1,4 @@
-name: 🚦 CI - Test & Build
+name: 🚦 CI - Build & Test
 
 on:
   push:

@@ -1,20 +1,15 @@
 name: 🚀 CD - Deploy to Cloud Run
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["🚦 CI - Build & Test"]
+    types:
+      - completed
 
 jobs:
   deploy:
-    if: |
-      contains(github.event.head_commit.message, '[skip]') == false &&
-      github.event_name == 'push' &&
-      (
-        contains(join(github.event.head_commit.modified), 'apps/finance-api/') ||
-        contains(join(github.event.head_commit.added), 'apps/finance-api/') ||
-        contains(join(github.event.head_commit.removed), 'apps/finance-api/')
-      )
+    # Only run if the CI workflow succeeded
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     runs-on: ubuntu-latest
 
