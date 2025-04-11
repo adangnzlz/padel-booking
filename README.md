@@ -1,180 +1,256 @@
-# finance-monorepo
+# Finance Monorepo
 
-# 📌 Finance API
+> **Personal Project Statement**: This personal project is a sandbox for testing out technologies and exploring best practices. It does not aim to provide the optimal solution for the specific problem implemented, but rather to serve as a learning and experimentation platform.
 
-## 🚀 Project Setup and Startup
+This monorepo contains a full-stack financial application with a TypeScript/Express API backend and a React/Vite frontend, managed using Turbo and pnpm workspaces.
 
-This project uses `pnpm` as the package manager, managed via `Corepack`. Make sure to follow the steps below to configure it correctly in your environment.
+## 📋 Repository Structure
 
-### 📦 **Prerequisites**
+```
+finance-monorepo/
+├── apps/
+│   ├── finance-api/        # Backend Express API
+│   └── finance-web-app/    # Frontend React application
+├── packages/
+│   └── finance-types/      # Shared TypeScript types
+├── infra/                  # Terraform infrastructure for GCP
+├── .github/
+│   └── workflows/          # CI/CD pipelines
+└── [config files]          # Root configuration files
+```
+
+## 🛠️ Technology Stack
+
+### Core Infrastructure
+- **Monorepo Management**: Turborepo + pnpm workspaces
+- **Package Manager**: pnpm (v10.4.1)
+- **Language**: TypeScript
+- **CI/CD**: GitHub Actions
+
+### Backend (finance-api)
+- **Runtime**: Node.js (v20+)
+- **Framework**: Express.js
+- **Database**: PostgreSQL
+- **API Features**:
+  - Winston for logging
+  - Error handling
+  - Express validation
+  - Rate limiting
+  - CORS and Helmet for security
+  - 100% test coverage with Jest and Supertest
+
+### Frontend (finance-web-app)
+- **Framework**: React 18
+- **Build System**: Vite
+- **Styling**: Tailwind CSS
+- **Routing**: React Router
+- **Icons**: React Feather Icons
+
+### Infrastructure
+- **Cloud Provider**: Google Cloud Platform (GCP)
+  - Cloud Run for hosting the API
+  - Secret Manager for secure environment variables
+  - Artifact Registry for Docker images
+- **Database**: PostgreSQL (local Docker for development, Supabase for production)
+- **Frontend Hosting**: Netlify (automated deployments)
+
+## 🚀 Getting Started
+
+### Prerequisites
 
 - **Node.js** `>= v20.15.1`
-- **Corepack** enabled.
+- **Docker** for local database
+- **Google Cloud SDK** (optional, only for deployment)
 
-### 🛠 **Initial Configuration**
+### Initial Setup
 
-1. **Enable Corepack** (if not already enabled on your machine):
-
+1. **Clone the repository**:
    ```bash
-   corepack enable
+   git clone https://github.com/your-username/finance-monorepo.git
+   cd finance-monorepo
    ```
 
-2. **Set the specific version of `pnpm` for this project**:
-
+2. **Enable Corepack** (for pnpm management):
    ```bash
+   corepack enable
    corepack prepare pnpm@10.4.1 --activate
    ```
 
-3. **Verify that `pnpm` is working correctly**:
-
+3. **Verify pnpm installation**:
    ```bash
-   pnpm -v
+   pnpm -v  # Should display 10.4.1
    ```
 
-   It should display `10.4.1` (or the version specified in `package.json`).
+4. **Install dependencies**:
+   ```bash
+   pnpm install
+   ```
 
-### 📂 **Installing Dependencies**
+### Setting Up the Database
 
-To install the project's dependencies, run:
+The project uses PostgreSQL in Docker for local development:
+
+1. **Start the database**:
+   ```bash
+   pnpm --filter finance-api db:start
+   ```
+
+2. **Seed the database with initial data**:
+   ```bash
+   pnpm --filter finance-api db:seed
+   ```
+
+### Configure Environment Variables
+
+1. **Create a .env file for the API**:
+   ```bash
+   cp apps/finance-api/.env.example apps/finance-api/.env.dev
+   ```
+
+2. **Edit the .env.dev file** to include necessary database connection details:
+   ```
+   DATABASE_TYPE=postgres
+   API_VERSION=/api/v1
+   PORT=3000
+   DATABASE_URL=postgresql://postgres:postgres@localhost:5432/finance_dev
+   ```
+
+## 🖥️ Development Workflow
+
+### Starting the Backend
 
 ```bash
-pnpm install
+# Start just the API in development mode
+pnpm --filter finance-api dev
+
+# Or from the API directory
+cd apps/finance-api
+pnpm dev
 ```
 
-### ▶️ **Running the Project api**
-
-To start the server in development mode:
+### Starting the Frontend
 
 ```bash
-cd apps/finance-api
-pnpm start
+# Start just the frontend in development mode
+pnpm --filter finance-web-app dev
+
+# Or from the web app directory
+cd apps/finance-web-app
+pnpm dev
 ```
 
-### 🧪 **Running Tests**
+### Running the Entire Stack
 
-To run the tests:
+From the root directory:
+```bash
+pnpm dev
+```
+
+This will start both the backend and frontend in development mode using Turborepo.
+
+### Running Tests
 
 ```bash
-cd apps/finance-api
+# Run tests for a specific application
+pnpm --filter finance-api test
+
+# Run all tests in the monorepo
 pnpm test
 ```
 
-### 🔄 **Updating `pnpm` (optional)**
+## 🏗️ Building for Production
 
-If you need to update `pnpm` in the future, edit `package.json` and change the version in:
-
-```json
-"packageManager": "pnpm@X.Y.Z"
-```
-
-Then run:
+### Building All Applications
 
 ```bash
-corepack prepare pnpm@X.Y.Z --activate
+pnpm build
 ```
 
----
+### Building Specific Applications
 
-## 🛠 **Database Setup (PostgreSQL with Docker)**
+```bash
+pnpm --filter finance-api build
+pnpm --filter finance-web-app build
+```
 
-This project uses a PostgreSQL database running in a Docker container. Follow these steps to set it up or reset it:
+## 🚀 Deployment
 
-### 🗑 **Resetting the Database**
+### Backend Deployment (Google Cloud Run)
 
-If you need to delete and recreate the database:
+The API is automatically deployed to Google Cloud Run when changes are pushed to the `main` branch via GitHub Actions. To manually deploy:
+
+```bash
+# Build and push Docker image, then deploy to Cloud Run
+pnpm release:finance-api
+```
+
+You'll need Google Cloud credentials set up for this.
+
+### Frontend Deployment (Netlify)
+
+The web application is automatically deployed to Netlify when changes are pushed to the `main` branch. The deployment configuration is in `netlify.toml`.
+
+## 🗃️ Infrastructure Management
+
+The project uses Terraform to manage Google Cloud Platform infrastructure:
+
+- Artifact Registry for Docker images
+- Cloud Run service
+- IAM permissions for GitHub Actions deployment
+- Service accounts for the CI/CD pipeline
+
+To apply infrastructure changes:
+
+```bash
+cd infra
+terraform init
+terraform apply
+```
+
+## 🧩 Working with Shared Packages
+
+The monorepo includes shared packages in the `packages/` directory:
+
+- **finance-types**: TypeScript interfaces shared between frontend and backend
+
+To build shared packages:
+
+```bash
+pnpm --filter @finance/types build
+```
+
+## 🔄 Common Tasks
+
+### Updating pnpm Version
+
+1. Edit `packageManager` in the root `package.json`
+2. Run `corepack prepare pnpm@[new-version] --activate`
+
+### Resetting the Database
+
+If you need to reset your local database:
 
 ```bash
 docker stop pgdb
 docker rm pgdb
 docker volume prune -f
-docker rmi postgres ## OPTIONAL
+pnpm --filter finance-api db:start
+pnpm --filter finance-api db:seed
 ```
 
-### 🔄 **Re-downloading the PostgreSQL Docker Image**
-
-If you have removed the PostgreSQL image, download it again with:
+### Adding a New Dependency
 
 ```bash
-docker pull postgres
+# Add to a specific workspace
+pnpm --filter finance-api add express
+
+# Add as a dev dependency
+pnpm --filter finance-web-app add -D typescript
+
+# Add to shared package
+pnpm --filter @finance/types add -D typescript
 ```
 
-### 🏗 **Creating or Starting the Database**
+## 📝 License
 
-To avoid conflicts, use this command to **start** the database if it exists, or **create** it if it doesn't:
-
-```bash
-pnpm db:start
-pnpm db:seed
-```
-
-This command ensures credentials are **not hardcoded** in `package.json` and avoids container conflicts.
-
-### 🔄 **Updating `.env` File**
-
-Ensure that the `.env` file contains the correct database credentials:
-
-```env
-DATABASE_TYPE=postgres
-API_VERSION=/api/v1
-PORT=3000
-DATABASE_URL=postgresql://[username]:[password]@[host]:[port]/[database]
-```
-
-Make sure the `.env` file is **not versioned** by adding it to `.gitignore`:
-
-```bash
-echo ".env" >> .gitignore
-```
-
-
-
-📌 **By following these steps, we ensure that all developers and deployment environments use the same version of `pnpm`, and have a consistent and easily restorable PostgreSQL database setup.** 🚀
-
-
-This personal project is a sandbox for testing out technologies and exploring best practices. It does not aim to provide the optimal solution for the specific problem implemented, but rather to serve as a learning and experimentation platform.
-
-
-## Turbo repo
-
-Monorepo apps/libs index:
-
-- Apps
-  - finance-api
-  - finance-web-app
-- Packages
-  - finance-types
-
-### NodeJS with 
-
-- Winston
-- Loggin middlewares (JSON, durations, status code...)
-- Error handlers (asyncHandler, HttpError, Error interceptors)
-- Cors
-- Helmet
-- express validator
-- Rate limiter
-- Test (supertest, jest) 100% Coverage
-- Database provider with memory, file and postgres options
-- PostgreSQL (Docker) & scripts to initialize and seed the database
-
-### SPA with
-
-- React
-- Vite
-- Tailwind
-- React Router
-- React Feather Icons
-- React Hooks
-- Netlify (for auto deployment on push)
-
-
-
-### Infrastructure (GCP & Supabase)
-
-- Cloud Run
-- Secret Manager
-- Docker (Artifacts registry GCP)
-- Supabase (PostgreSQL)
-
-
-
+This project is licensed under the ISC License.
