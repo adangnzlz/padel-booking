@@ -4,19 +4,12 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "apps/finance-api/**"
 
 jobs:
   build:
-    if: |
-      contains(github.event.head_commit.message, '[skip]') == false &&
-      github.event_name == 'push' &&
-      (
-        contains(join(github.event.head_commit.modified), 'apps/finance-api/') ||
-        contains(join(github.event.head_commit.added), 'apps/finance-api/') ||
-        contains(join(github.event.head_commit.removed), 'apps/finance-api/')
-      )    
     runs-on: ubuntu-latest
-
     services:
       postgres:
         image: postgres:14
