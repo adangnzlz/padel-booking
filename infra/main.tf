@@ -120,3 +120,10 @@ resource "google_project_iam_member" "service_account_user" {
   role    = "roles/iam.serviceAccountUser"
   member  = "serviceAccount:${google_service_account.github_actions.email}"
 }
+
+# Permiso para acceder a Secret Manager
+resource "google_project_iam_member" "cloud_run_secret_access" {
+  project = var.project_id
+  role    = "roles/secretmanager.secretAccessor"
+  member  = "serviceAccount:${var.project_number}-compute@developer.gserviceaccount.com"
+}

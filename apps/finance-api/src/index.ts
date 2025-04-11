@@ -33,7 +33,7 @@ app.use(express.json({ limit: "10kb" }));
 app.use(helmet());
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Finances API TypeScript V1");
+  res.send("Finances API V1");
 });
 
 app.use(`${version}/users`, strictRateLimiter, usersRoutes);
