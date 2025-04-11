@@ -127,3 +127,22 @@ resource "google_project_iam_member" "cloud_run_secret_access" {
   role    = "roles/secretmanager.secretAccessor"
   member  = "serviceAccount:${var.project_number}-compute@developer.gserviceaccount.com"
 }
+
+resource "google_secret_manager_secret_iam_member" "access_database_type" {
+  secret_id = data.google_secret_manager_secret.database_type.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${var.project_number}-compute@developer.gserviceaccount.com"
+}
+
+resource "google_secret_manager_secret_iam_member" "access_database_url" {
+  secret_id = data.google_secret_manager_secret.database_url.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${var.project_number}-compute@developer.gserviceaccount.com"
+}
+
+resource "google_secret_manager_secret_iam_member" "access_api_version" {
+  secret_id = data.google_secret_manager_secret.api_version.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${var.project_number}-compute@developer.gserviceaccount.com"
+}
+  
