@@ -1,10 +1,7 @@
-name: CI
+name: build
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
@@ -20,15 +17,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: 'pnpm'
 
-      - name: Install pnpm
+      - name: Install PNPM
         run: npm install -g pnpm
 
       - name: Enable Corepack and prepare PNPM
         run: |
           corepack enable
           corepack prepare pnpm@10.4.1 --activate
+          pnpm -v  # debug check
 
       - name: Install dependencies
         run: pnpm install
@@ -37,4 +34,4 @@ jobs:
         run: pnpm build
 
       - name: Run tests (only for finance-api)
-        run: pnpm test --filter=finance-api...
+        run: pnpm --filter=finance-api test
