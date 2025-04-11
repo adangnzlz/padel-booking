@@ -135,3 +135,15 @@ apps/finance-api/.env.*
 apps/finance-api/data
 # Local Netlify folder
 .netlify
+
+# Terraform generated files
+infra/.terraform/
+infra/terraform.tfstate
+infra/terraform.tfstate.backup
+infra/terraform.tfstate.*.backup
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfstate
+terraform.tfstate.*
