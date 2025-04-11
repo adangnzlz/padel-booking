@@ -12,6 +12,12 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
+    "docker:build:finance-api": "docker build --platform=linux/amd64 -f Dockerfile -t finance-api --build-arg APP=finance-api .",
+    "docker:tag:finance-api": "docker tag finance-api europe-west1-docker.pkg.dev/finance-monorepo/finance-api-repo/finance-api:latest",
+    "docker:push:finance-api": "docker push europe-west1-docker.pkg.dev/finance-monorepo/finance-api-repo/finance-api:latest",
+    "docker:run:finance-api": "docker run --rm --name finance-api-dev --env-file apps/finance-api/.env.dev -p 3000:3000 finance-api",
+    "deploy:finance-api": "gcloud run deploy finance-api --image europe-west1-docker.pkg.dev/finance-monorepo/finance-api-repo/finance-api:latest --region europe-west1 --platform managed --allow-unauthenticated --port 3000 --set-secrets=DATABASE_URL=FINANCE_API_DATABASE_URL:latest,API_VERSION=FINANCE_API_API_VERSION:latest,DATABASE_TYPE=FINANCE_API_DATABASE_TYPE:latest --set-env-vars=NODE_ENV=production",
+    "release:finance-api": "pnpm docker:build:finance-api && pnpm docker:tag:finance-api && pnpm docker:push:finance-api && pnpm deploy:finance-api",
     "clean": "turbo run clean && rm -rf node_modules"
   },
   "keywords": [],

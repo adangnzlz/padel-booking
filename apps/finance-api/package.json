@@ -8,8 +8,6 @@
     "db:seed": "cat config/seed.sql | docker exec -i pgdb psql -U postgres -d finance_dev",
     "dev": "cross-env NODE_ENV=dev nodemon --exec ts-node src/index.ts",
     "build": "tsc",
-    "predeploy": "cd ../../ && cp apps/finance-api/Dockerfile . && gcloud builds submit --tag europe-west1-docker.pkg.dev/finance-monorepo/finance-api-repo/finance-api:latest . && rm Dockerfile",
-    "deploy": "gcloud run deploy finance-api --image europe-west1-docker.pkg.dev/finance-monorepo/finance-api-repo/finance-api:latest --region europe-west1 --platform managed --allow-unauthenticated --port 3000 --set-secrets=DATABASE_URL=FINANCE_API_DATABASE_URL:latest,API_VERSION=FINANCE_API_API_VERSION:latest,DATABASE_TYPE=FINANCE_API_DATABASE_TYPE:latest --set-env-vars=NODE_ENV=production",
     "test": "cross-env NODE_ENV=test jest --config=jest.config.js --runInBand"
   },
   "keywords": [],
