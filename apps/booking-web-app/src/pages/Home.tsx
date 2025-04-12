@@ -4,7 +4,7 @@ import AvailableOptionsPanel from '../components/AvailableOptionsPanel/Available
 import { availabilityService } from '../services/availability.context'
 import { bookingService } from '../services/booking.service'
 import type { Court, Reservation, StartTime, DurationMinutes } from '@booking/types'
-import { generateTimeSlots } from '@booking/types'
+import { transformBookingData } from '../components/BookingGrid/utils'
 
 const Home: FC = () => {
   const [hours, setHours] = useState<StartTime[]>([])
@@ -49,15 +49,14 @@ const Home: FC = () => {
     }
   };
 
+  const gridData = transformBookingData(courts, reservations, hours);
   const availableSlots = availabilityService.getAvailableSlots(reservations, courts, hours, selectedDuration)
 
   return (
     <div className="flex flex-row items-start min-h-screen">
       <div className="flex-1">
         <BookingGrid 
-          hours={hours} 
-          courts={courts} 
-          reservations={reservations}
+          data={gridData}
         />
       </div>
 

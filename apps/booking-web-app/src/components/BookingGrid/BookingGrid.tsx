@@ -1,28 +1,23 @@
 import React from "react";
-import type { Court, Reservation, StartTime } from "@booking/types";
+import type { GridData } from "./types";
 import HeaderRow from "./BookingGrid.HeaderRow";
 import TimeRow from "./BookingGrid.TimeRow";
-import { getUISlot } from "./utils";
 
 interface BookingGridProps {
-  hours: StartTime[];
-  courts: Court[];
-  reservations: Reservation[];
+  data: GridData;
 }
 
-export default function BookingGrid({ hours, courts, reservations }: BookingGridProps) {
-  if (!courts.length || !hours.length) {
+export default function BookingGrid({ data }: BookingGridProps) {
+  if (!data.headers.length || !data.rows.length) {
     return <div className="p-4">Cargando reservas...</div>;
   }
 
-  const getSlot = getUISlot(reservations);
-
   return (
     <div className="p-4">
-      <div className={`grid grid-cols-[100px_repeat(${courts.length},160px)] border border-gray-200 rounded-lg`}>
-        <HeaderRow courts={courts} />
-        {hours.map((time) => (
-          <TimeRow key={time} time={time} courts={courts} getSlot={getSlot} />
+      <div className={`grid grid-cols-[100px_repeat(${data.headers.length},160px)] border border-gray-200 rounded-lg`}>
+        <HeaderRow headers={data.headers} />
+        {data.rows.map((row, index) => (
+          <TimeRow key={row.time} row={row} isLast={index === data.rows.length - 1} />
         ))}
       </div>
     </div>

@@ -1,4 +1,5 @@
-import type { Court, Reservation, StartTime, DurationMinutes } from "@booking/types";
+import type { Court, Reservation, StartTime } from "@booking/types";
+import type { GridData } from "./types";
 
 /**
  * Recibe la lista de reservas y devuelve una función que busca
@@ -52,5 +53,37 @@ export const getUISlot = (reservations: Reservation[]) => {
       reserved: true,
       label: showLabel ? `${specificReservation.duration} min` : undefined,
     };
+  };
+};
+
+/**
+ * Transforma los datos de reservas en el formato necesario para el BookingGrid
+ */
+export const transformBookingData = (
+  courts: Court[],
+  reservations: Reservation[],
+  hours: StartTime[]
+): GridData => {
+  const getSlot = getUISlot(reservations);
+
+  const headers = courts.map((court) => ({
+    id: court.id.toString(),
+    label: court.name
+  }));
+
+  const rows = hours.map((time) => ({
+    time,
+    cells: courts.map((court) => {
+      const slot = getSlot(court, time);
+      return {
+        occupied: slot.reserved,
+        label: slot.label
+      };
+    })
+  }));
+
+  return {
+    headers,
+    rows
   };
 };
