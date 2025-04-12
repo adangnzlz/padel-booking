@@ -1,9 +1,9 @@
 // services/availability.strategy.ts
 
 import { Court } from "@booking/types";
-import type { UISlot } from "../services/booking.service";
+import type { Reservation } from "@booking/types";
 
 export interface AvailabilityStrategy {
-    getAvailableSlots(reservations: UISlot[], courts: Court[], hours: string[]): UISlot[];
+    getAvailableSlots(reservations: Reservation[], courts: Court[], hours: string[], durationMinutes: 60 | 90 | 120): Reservation[];
   }
   
