@@ -6,56 +6,7 @@ import type {
   StartTime,
 } from "@booking/types";
 
-// Simulated data
-const courts: Court[] = [
-  {
-    id: 1,
-    name: "Pista 1",
-    slots: [],
-  },
-  {
-    id: 2,
-    name: "Pista 2",
-    slots: [],
-  },
-  {
-    id: 3,
-    name: "Pista 3",
-    slots: [],
-  },
-  {
-    id: 4,
-    name: "Pista 4",
-    slots: [],
-  },
-];
-
-const reservations: Reservation[] = [
-  {
-    id: "1",
-    courtId: 1,
-    startTime: "18:00",
-    duration: 90,
-  },
-  {
-    id: "2",
-    courtId: 2,
-    startTime: "18:00",
-    duration: 90,
-  },
-  {
-    id: "3",
-    courtId: 3,
-    startTime: "19:00",
-    duration: 60,
-  },
-  {
-    id: "4",
-    courtId: 4,
-    startTime: "10:00",
-    duration: 120,
-  },
-];
+import { courts, reservations } from "../data/data";
 
 // Simulación de delay de red
 const simulateDelay = <T>(data: T, ms = 300): Promise<T> =>

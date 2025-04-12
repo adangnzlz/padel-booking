@@ -2,8 +2,8 @@ import type { Court, Reservation, StartTime } from "@booking/types";
 import type { GridData } from "../../components/BookingGrid/BookingGrid.types";
 
 /**
- * Recibe la lista de reservas y devuelve una función que busca
- * un UISlot dado un courtId y una hora.
+ * Receives the list of reservations and returns a function that searches
+ * for a UISlot given a courtId and a time.
  */
 export const getUISlot = (reservations: Reservation[]) => {
   // Helper function to get all hours
@@ -57,7 +57,7 @@ export const getUISlot = (reservations: Reservation[]) => {
 };
 
 /**
- * Transforma los datos de reservas en el formato necesario para el BookingGrid
+ * Transforms booking data into the format required for the BookingGrid
  */
 export const transformBookingData = (
   courts: Court[],
