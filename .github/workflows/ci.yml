@@ -1,70 +1,70 @@
-name: 🚦 CI - Build & Test
+# name: 🚦 CI - Build & Test
 
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - "apps/finance-api/**"
+# on:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - "apps/booking-api/**"
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:14
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_DB: finance_test
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: financepassword
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     services:
+#       postgres:
+#         image: postgres:14
+#         ports:
+#           - 5432:5432
+#         env:
+#           POSTGRES_DB: booking_test
+#           POSTGRES_USER: postgres
+#           POSTGRES_PASSWORD: bookingpassword
+#         options: >-
+#           --health-cmd pg_isready
+#           --health-interval 10s
+#           --health-timeout 5s
+#           --health-retries 5
 
-    env:
-      NODE_ENV: test
-      DATABASE_TYPE: postgres
-      API_VERSION: /api/v1
-      PORT: 3030
-      DATABASE_URL: postgres://postgres:financepassword@localhost:5432/finance_test
+#     env:
+#       NODE_ENV: test
+#       DATABASE_TYPE: postgres
+#       API_VERSION: /api/v1
+#       PORT: 3030
+#       DATABASE_URL: postgres://postgres:bookingpassword@localhost:5432/booking_test
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout repo
+#         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: 20
 
-      - name: Install PNPM
-        run: npm install -g pnpm
+#       - name: Install PNPM
+#         run: npm install -g pnpm
 
-      - name: Enable Corepack and prepare PNPM
-        run: |
-          corepack enable
-          corepack prepare pnpm@10.4.1 --activate
-          pnpm -v  # debug check
+#       - name: Enable Corepack and prepare PNPM
+#         run: |
+#           corepack enable
+#           corepack prepare pnpm@10.4.1 --activate
+#           pnpm -v  # debug check
 
-      - name: Install dependencies
-        run: pnpm install
+#       - name: Install dependencies
+#         run: pnpm install
 
-      - name: Build monorepo
-        run: pnpm build
+#       - name: Build monorepo
+#         run: pnpm build
 
-      - name: Wait for DB to be ready
-        run: |
-          echo "⏳ Waiting for Postgres..."
-          until pg_isready -h localhost -p 5432; do sleep 1; done
-          echo "✅ Postgres is ready"
+#       - name: Wait for DB to be ready
+#         run: |
+#           echo "⏳ Waiting for Postgres..."
+#           until pg_isready -h localhost -p 5432; do sleep 1; done
+#           echo "✅ Postgres is ready"
 
-      - name: Seed test DB (init.sql)
-        run: |
-          psql $DATABASE_URL -f apps/finance-api/dbinit/init.sql
+#       - name: Seed test DB (init.sql)
+#         run: |
+#           psql $DATABASE_URL -f apps/booking-api/dbinit/init.sql
 
-      - name: Run tests (only for finance-api)
-        run: pnpm --filter=finance-api test
+#       - name: Run tests (only for booking-api)
+#         run: pnpm --filter=booking-api test

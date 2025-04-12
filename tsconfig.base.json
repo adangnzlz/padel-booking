@@ -11,7 +11,10 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@finance/types": ["packages/finance-types/src/index"],
+      "@booking/api": ["apps/booking-api/src"],
+      "@booking/api/*": ["apps/booking-api/src/*"],
+      "@booking/web": ["apps/booking-web-app/src"],
+      "@booking/web/*": ["apps/booking-web-app/src/*"]
     }
   }
 }

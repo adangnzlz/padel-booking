@@ -3,10 +3,6 @@ data "google_secret_manager_secret" "database_url" {
   secret_id = "FINANCE_API_DATABASE_URL"
 }
 
-data "google_secret_manager_secret" "database_type" {
-  secret_id = "FINANCE_API_DATABASE_TYPE"
-}
-
 data "google_secret_manager_secret" "api_version" {
   secret_id = "FINANCE_API_API_VERSION"
 }
@@ -15,7 +11,6 @@ data "google_secret_manager_secret" "api_version" {
 locals {
   missing_secrets = [
     data.google_secret_manager_secret.database_url.secret_id == "" ? "FINANCE_API_DATABASE_URL" : null,
-    data.google_secret_manager_secret.database_type.secret_id == "" ? "FINANCE_API_DATABASE_TYPE" : null,
     data.google_secret_manager_secret.api_version.secret_id == "" ? "FINANCE_API_API_VERSION" : null
   ]
 }

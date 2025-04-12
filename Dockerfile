@@ -1,42 +1,42 @@
-# --- Build stage ---
-    FROM node:20-alpine AS builder
+# # --- Build stage ---
+#     FROM node:20-alpine AS builder
 
-    WORKDIR /app
+#     WORKDIR /app
     
-    ARG APP=finance-api
+#     ARG APP=booking-api
     
-    RUN corepack enable && corepack prepare pnpm@10.4.1 --activate
+#     RUN corepack enable && corepack prepare pnpm@10.4.1 --activate
     
-    COPY . .
+#     COPY . .
     
-    RUN pnpm install --no-frozen-lockfile
+#     RUN pnpm install --no-frozen-lockfile
     
-    RUN pnpm turbo run build --filter=${APP}...
+#     RUN pnpm turbo run build --filter=${APP}...
     
-    # --- Runtime stage ---
-    FROM node:20-alpine
+#     # --- Runtime stage ---
+#     FROM node:20-alpine
     
-    WORKDIR /app
+#     WORKDIR /app
     
-    ARG APP=finance-api
+#     ARG APP=booking-api
     
-    RUN corepack enable && corepack prepare pnpm@10.4.1 --activate
+#     RUN corepack enable && corepack prepare pnpm@10.4.1 --activate
     
-    # Copy built app and required packages
-    COPY --from=builder /app/apps/${APP} /app/apps/${APP}
-    COPY --from=builder /app/packages /app/packages
-    COPY --from=builder /app/pnpm-workspace.yaml ./
-    COPY --from=builder /app/pnpm-lock.yaml ./
-    COPY --from=builder /app/package.json ./
+#     # Copy built app and required packages
+#     COPY --from=builder /app/apps/${APP} /app/apps/${APP}
+#     COPY --from=builder /app/packages /app/packages
+#     COPY --from=builder /app/pnpm-workspace.yaml ./
+#     COPY --from=builder /app/pnpm-lock.yaml ./
+#     COPY --from=builder /app/package.json ./
     
-    ENV PNPM_IGNORE_SCRIPTS=true
+#     ENV PNPM_IGNORE_SCRIPTS=true
     
-    RUN pnpm install --prod --filter=${APP}... --ignore-scripts
+#     RUN pnpm install --prod --filter=${APP}... --ignore-scripts
     
-    ENV NODE_ENV=production
-    EXPOSE 3000
+#     ENV NODE_ENV=production
+#     EXPOSE 3000
     
-    ENV APP=finance-api
-    ENTRYPOINT sh -c "node apps/${APP}/dist/src/index.js"
+#     ENV APP=booking-api
+#     ENTRYPOINT sh -c "node apps/${APP}/dist/src/index.js"
 
     

@@ -39,18 +39,6 @@ resource "google_cloud_run_service" "default" {
             }
           }
         }
-
-        env {
-          name = "DATABASE_TYPE"
-
-          value_from {
-            secret_key_ref {
-              name = "FINANCE_API_DATABASE_TYPE"
-              key  = "latest"
-            }
-          }
-        }
-
         env {
           name = "API_VERSION"
 

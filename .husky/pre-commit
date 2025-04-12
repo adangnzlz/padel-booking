@@ -1,1 +1,1 @@
-cd apps/finance-api && pnpm test
+cd apps/booking-api && pnpm test

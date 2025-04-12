@@ -1,49 +1,49 @@
-name: 🚀 CD - Deploy to Cloud Run
+# name: 🚀 CD - Deploy to Cloud Run
 
-on:
-  workflow_run:
-    workflows: ["🚦 CI - Build & Test"]
-    types:
-      - completed
+# on:
+#   workflow_run:
+#     workflows: ["🚦 CI - Build & Test"]
+#     types:
+#       - completed
 
-jobs:
-  deploy:
-    # Only run if the CI workflow succeeded
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+# jobs:
+#   deploy:
+#     # Only run if the CI workflow succeeded
+#     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
-    runs-on: ubuntu-latest
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Authenticate with Google Cloud
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+#       - name: Authenticate with Google Cloud
+#         uses: google-github-actions/auth@v1
+#         with:
+#           credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
 
-      - name: Set up gcloud CLI
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-          project_id: finance-monorepo
+#       - name: Set up gcloud CLI
+#         uses: google-github-actions/setup-gcloud@v1
+#         with:
+#           project_id: booking-monorepo
 
-      - name: Build Docker image
-        run: |
-          docker build -t europe-west1-docker.pkg.dev/finance-monorepo/finance-api-repo/finance-api:latest \
-            --build-arg APP=finance-api .
+#       - name: Build Docker image
+#         run: |
+#           docker build -t europe-west1-docker.pkg.dev/booking-monorepo/booking-api-repo/booking-api:latest \
+#             --build-arg APP=booking-api .
 
-      - name: Push Docker image to Artifact Registry
-        run: |
-          gcloud auth configure-docker europe-west1-docker.pkg.dev
-          docker push europe-west1-docker.pkg.dev/finance-monorepo/finance-api-repo/finance-api:latest
+#       - name: Push Docker image to Artifact Registry
+#         run: |
+#           gcloud auth configure-docker europe-west1-docker.pkg.dev
+#           docker push europe-west1-docker.pkg.dev/booking-monorepo/booking-api-repo/booking-api:latest
 
-      - name: Deploy to Cloud Run
-        run: |
-          gcloud run deploy finance-api \
-            --image europe-west1-docker.pkg.dev/finance-monorepo/finance-api-repo/finance-api:latest \
-            --region europe-west1 \
-            --platform managed \
-            --allow-unauthenticated \
-            --port 3000 \
-            --set-secrets=DATABASE_URL=FINANCE_API_DATABASE_URL:latest,API_VERSION=FINANCE_API_API_VERSION:latest,DATABASE_TYPE=FINANCE_API_DATABASE_TYPE:latest \
-            --set-env-vars=NODE_ENV=production
+#       - name: Deploy to Cloud Run
+#         run: |
+#           gcloud run deploy booking-api \
+#             --image europe-west1-docker.pkg.dev/booking-monorepo/booking-api-repo/booking-api:latest \
+#             --region europe-west1 \
+#             --platform managed \
+#             --allow-unauthenticated \
+#             --port 3000 \
+#             --set-secrets=DATABASE_URL=BOOKING_API_DATABASE_URL:latest,API_VERSION=BOOKING_API_API_VERSION:latest,DATABASE_TYPE=BOOKING_API_DATABASE_TYPE:latest \
+#             --set-env-vars=NODE_ENV=production

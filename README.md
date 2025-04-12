@@ -1,18 +1,17 @@
-# Finance Monorepo
+# Booking Monorepo
 
 > **Personal Project Statement**: This personal project is a sandbox for testing out technologies and exploring best practices. It does not aim to provide the optimal solution for the specific problem implemented, but rather to serve as a learning and experimentation platform.
 
-This monorepo contains a full-stack financial application with a TypeScript/Express API backend and a React/Vite frontend, managed using Turbo and pnpm workspaces.
+This monorepo contains a full-stack booking application with a TypeScript/Express API backend and a React/Vite frontend, managed using Turbo and pnpm workspaces.
 
 ## 📋 Repository Structure
 
 ```
-finance-monorepo/
+booking-monorepo/
 ├── apps/
-│   ├── finance-api/        # Backend Express API
-│   └── finance-web-app/    # Frontend React application
+│   ├── booking-api/        # Backend Express API
+│   └── booking-web-app/    # Frontend React application
 ├── packages/
-│   └── finance-types/      # Shared TypeScript types
 ├── infra/                  # Terraform infrastructure for GCP
 ├── .github/
 │   └── workflows/          # CI/CD pipelines
@@ -27,7 +26,7 @@ finance-monorepo/
 - **Language**: TypeScript
 - **CI/CD**: GitHub Actions
 
-### Backend (finance-api)
+### Backend (booking-api)
 - **Runtime**: Node.js (v20+)
 - **Framework**: Express.js
 - **Database**: PostgreSQL
@@ -39,7 +38,7 @@ finance-monorepo/
   - CORS and Helmet for security
   - 100% test coverage with Jest and Supertest
 
-### Frontend (finance-web-app)
+### Frontend (booking-web-app)
 - **Framework**: React 18
 - **Build System**: Vite
 - **Styling**: Tailwind CSS
@@ -66,8 +65,8 @@ finance-monorepo/
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/finance-monorepo.git
-   cd finance-monorepo
+   git clone https://github.com/your-username/padel-booking.git
+   cd padel-booking
    ```
 
 2. **Enable Corepack** (for pnpm management):
@@ -92,19 +91,19 @@ The project uses PostgreSQL in Docker for local development:
 
 1. **Start the database**:
    ```bash
-   pnpm --filter finance-api db:start
+   pnpm --filter booking-api db:start
    ```
 
 2. **Seed the database with initial data**:
    ```bash
-   pnpm --filter finance-api db:seed
+   pnpm --filter booking-api db:seed
    ```
 
 ### Configure Environment Variables
 
 1. **Create a .env file for the API**:
    ```bash
-   cp apps/finance-api/.env.example apps/finance-api/.env.dev
+   cp apps/booking-api/.env.example apps/booking-api/.env.dev
    ```
 
 2. **Edit the .env.dev file** to include necessary database connection details:
@@ -112,7 +111,7 @@ The project uses PostgreSQL in Docker for local development:
    DATABASE_TYPE=postgres
    API_VERSION=/api/v1
    PORT=3000
-   DATABASE_URL=postgresql://postgres:postgres@localhost:5432/finance_dev
+   DATABASE_URL=postgresql://postgres:postgres@localhost:5432/padel_dev
    ```
 
 ## 🖥️ Development Workflow
@@ -121,10 +120,10 @@ The project uses PostgreSQL in Docker for local development:
 
 ```bash
 # Start just the API in development mode
-pnpm --filter finance-api dev
+pnpm --filter booking-api dev
 
 # Or from the API directory
-cd apps/finance-api
+cd apps/booking-api
 pnpm dev
 ```
 
@@ -132,10 +131,10 @@ pnpm dev
 
 ```bash
 # Start just the frontend in development mode
-pnpm --filter finance-web-app dev
+pnpm --filter booking-web-app dev
 
 # Or from the web app directory
-cd apps/finance-web-app
+cd apps/booking-web-app
 pnpm dev
 ```
 
@@ -152,7 +151,7 @@ This will start both the backend and frontend in development mode using Turborep
 
 ```bash
 # Run tests for a specific application
-pnpm --filter finance-api test
+pnpm --filter booking-api test
 
 # Run all tests in the monorepo
 pnpm test
@@ -169,8 +168,8 @@ pnpm build
 ### Building Specific Applications
 
 ```bash
-pnpm --filter finance-api build
-pnpm --filter finance-web-app build
+pnpm --filter booking-api build
+pnpm --filter booking-web-app build
 ```
 
 ## 🚀 Deployment
@@ -181,7 +180,7 @@ The API is automatically deployed to Google Cloud Run when changes are pushed to
 
 ```bash
 # Build and push Docker image, then deploy to Cloud Run
-pnpm release:finance-api
+pnpm release:booking-api
 ```
 
 You'll need Google Cloud credentials set up for this.
@@ -207,18 +206,6 @@ terraform init
 terraform apply
 ```
 
-## 🧩 Working with Shared Packages
-
-The monorepo includes shared packages in the `packages/` directory:
-
-- **finance-types**: TypeScript interfaces shared between frontend and backend
-
-To build shared packages:
-
-```bash
-pnpm --filter @finance/types build
-```
-
 ## 🔄 Common Tasks
 
 ### Updating pnpm Version
@@ -234,21 +221,18 @@ If you need to reset your local database:
 docker stop pgdb
 docker rm pgdb
 docker volume prune -f
-pnpm --filter finance-api db:start
-pnpm --filter finance-api db:seed
+pnpm --filter booking-api db:start
+pnpm --filter booking-api db:seed
 ```
 
 ### Adding a New Dependency
 
 ```bash
 # Add to a specific workspace
-pnpm --filter finance-api add express
+pnpm --filter booking-api add express
 
 # Add as a dev dependency
-pnpm --filter finance-web-app add -D typescript
-
-# Add to shared package
-pnpm --filter @finance/types add -D typescript
+pnpm --filter booking-web-app add -D typescript
 ```
 
 ## 📝 License
