@@ -1,6 +1,6 @@
 // components/AvailableOptionsPanel.tsx
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import type { Court, Reservation, StartTime, DurationMinutes } from "@booking/types";
 
 interface AvailableOptionsPanelProps {
@@ -12,13 +12,25 @@ interface AvailableOptionsPanelProps {
 
 const DURATIONS: DurationMinutes[] = [60, 90, 120];
 
-export default function AvailableOptionsPanel({ 
-  slots, 
-  courts, 
+export default function AvailableOptionsPanel({
+  slots,
+  courts,
   onDurationChange,
   onBookSlot,
 }: AvailableOptionsPanelProps) {
-  const [selectedCourtId, setSelectedCourtId] = useState<number | null>(courts[0]?.id ?? null);
+  const [selectedCourtId, setSelectedCourtId] = useState<number | null>(() => {
+    if (courts.length > 0) {
+      return courts[0].id;
+    }
+    return null;
+  });
+
+  // Update selected court when courts prop changes
+  useEffect(() => {
+    if (courts.length > 0 && selectedCourtId === null) {
+      setSelectedCourtId(courts[0].id);
+    }
+  }, [courts, selectedCourtId]);
   const [selectedDuration, setSelectedDuration] = useState<DurationMinutes>(90);
 
   const filteredSlots = useMemo(() => {
@@ -71,7 +83,7 @@ export default function AvailableOptionsPanel({
           </select>
         </div>
       </div>
-      
+
       {filteredSlots.length === 0 ? (
         <div className="flex justify-center items-center py-8">
           <p className="text-gray-500">No hay opciones disponibles</p>

@@ -19,7 +19,7 @@ export default function BookingGrid({ hours, courts, reservations }: BookingGrid
 
   return (
     <div className="p-4">
-      <div className={`grid grid-cols-[100px_repeat(${courts.length},160px)] border border-black`}>
+      <div className={`grid grid-cols-[100px_repeat(${courts.length},160px)] border border-gray-200 rounded-lg`}>
         <HeaderRow courts={courts} />
         {hours.map((time) => (
           <TimeRow key={time} time={time} courts={courts} getSlot={getSlot} />
