@@ -1,6 +1,6 @@
 // components/BookingGrid.SlotCell.tsx
 
-import type { GridCell } from "./types";
+import type { GridCell } from "./BookingGrid.types";
 
 interface SlotCellProps {
   courtId: number;

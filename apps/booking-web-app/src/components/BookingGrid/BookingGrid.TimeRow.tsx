@@ -1,7 +1,7 @@
 // components/BookingGrid.TimeRow.tsx
 
 import React from "react";
-import type { GridRow } from "./types";
+import type { GridRow } from "./BookingGrid.types";
 
 interface TimeRowProps {
   row: GridRow;

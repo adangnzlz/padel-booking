@@ -1,5 +1,5 @@
 import React from "react";
-import type { GridData } from "./types";
+import type { GridData } from "./BookingGrid.types";
 import HeaderRow from "./BookingGrid.HeaderRow";
 import TimeRow from "./BookingGrid.TimeRow";
 

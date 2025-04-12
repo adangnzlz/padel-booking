@@ -1,5 +1,5 @@
 import type { Court, Reservation, StartTime } from "@booking/types";
-import type { GridData } from "../../components/BookingGrid/types";
+import type { GridData } from "../../components/BookingGrid/BookingGrid.types";
 
 /**
  * Recibe la lista de reservas y devuelve una función que busca

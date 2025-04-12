@@ -1,7 +1,7 @@
 // components/BookingGrid.HeaderRow.tsx
 
 import React from "react";
-import type { GridHeader } from "./types";
+import type { GridHeader } from "./BookingGrid.types";
 
 interface HeaderRowProps {
   headers: GridHeader[];
