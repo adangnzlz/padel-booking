@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useState } from 'react'
-import BookingGrid from '../components/BookingGrid/BookingGrid'
-import AvailableOptionsPanel from '../components/AvailableOptionsPanel/AvailableOptionsPanel'
-import { availabilityService } from '../services/availability.context'
-import { bookingService } from '../services/booking.service'
+import BookingGrid from '../../components/BookingGrid/BookingGrid'
+import AvailableOptionsPanel from '../../components/AvailableOptionsPanel/AvailableOptionsPanel'
+import { availabilityService } from '../../services/availability.context'
+import { bookingService } from '../../services/booking.service'
 import type { Court, Reservation, StartTime, DurationMinutes } from '@booking/types'
-import { transformBookingData } from '../components/BookingGrid/utils'
+import { transformBookingData } from './Home.utils'
 
 const Home: FC = () => {
   const [hours, setHours] = useState<StartTime[]>([])
