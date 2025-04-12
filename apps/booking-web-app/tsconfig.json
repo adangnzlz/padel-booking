@@ -8,7 +8,9 @@
     "baseUrl": ".",
     "paths": {
       "@booking/web": ["src"],
-      "@booking/web/*": ["src/*"]
+      "@booking/web/*": ["src/*"],
+      "@booking/types": ["../../packages/booking-types/src"],
+      "@booking/types/*": ["../../packages/booking-types/src/*"]
     }
   },
   "include": ["src", "tests"],

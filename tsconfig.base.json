@@ -14,7 +14,9 @@
       "@booking/api": ["apps/booking-api/src"],
       "@booking/api/*": ["apps/booking-api/src/*"],
       "@booking/web": ["apps/booking-web-app/src"],
-      "@booking/web/*": ["apps/booking-web-app/src/*"]
+      "@booking/web/*": ["apps/booking-web-app/src/*"],
+      "@booking/types": ["packages/booking-types/src"],
+      "@booking/types/*": ["packages/booking-types/src/*"]
     }
   }
 }
