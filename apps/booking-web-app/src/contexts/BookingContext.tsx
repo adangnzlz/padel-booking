@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { bookingService } from '../services/booking.service';
-import type { Court, Reservation, StartTime, DurationMinutes, Slot, BookingConfig } from '@booking/types';
+import type { Court, Reservation, HourString, DurationMinutes, Slot, BookingConfig } from '@booking/types';
 
 interface BookingContextType {
-  hours: StartTime[];
+  hours: HourString[];
   courts: Court[];
   reservations: Reservation[];
   availableDurations: DurationMinutes[];
@@ -19,7 +19,7 @@ const defaultConfig: BookingConfig = {
 const BookingContext = createContext<BookingContextType | undefined>(undefined);
 
 export const BookingProvider: React.FC<{ children: React.ReactNode; config?: BookingConfig }> = ({ children, config = defaultConfig }) => {
-  const [hours, setHours] = useState<StartTime[]>([]);
+  const [hours, setHours] = useState<HourString[]>([]);
   const [courts, setCourts] = useState<Court[]>([]);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [availableDurations, setAvailableDurations] = useState<DurationMinutes[]>(config.availableDurations);
