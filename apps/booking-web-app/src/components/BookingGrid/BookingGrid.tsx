@@ -1,10 +1,10 @@
 import React from "react";
-import type { GridData } from "./BookingGrid.types";
+import type { BookingGridData } from "./BookingGrid.types";
 import HeaderRow from "./BookingGrid.HeaderRow";
 import TimeRow from "./BookingGrid.TimeRow";
 
 interface BookingGridProps {
-  data: GridData;
+  data: BookingGridData;
 }
 
 export default function BookingGrid({ data }: BookingGridProps) {

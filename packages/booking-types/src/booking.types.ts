@@ -1,15 +1,15 @@
-export type TimeSlot = `${`${8 | 9 | 1 | 2}${0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}`}:${"00" | "30"}`;
 
-export type StartTime = string; // e.g. "08:00", "08:30", ..., "22:30"
+export type HourString = `${string}${":"}${"00" | "15" | "30" | "45"}`;
 
-export type DurationMinutes = 60 | 90 | 120;
+export const DURATION_MINUTES = [60, 90, 120] as const;
+export type DurationMinutes = typeof DURATION_MINUTES[number];
 
 export type CourtId = number;
 
 export interface Reservation {
   id: string;
   courtId: CourtId;
-  startTime: StartTime;
+  startTime: HourString;
   duration: DurationMinutes;
 }
 
@@ -20,7 +20,7 @@ export interface Court {
 }
 
 export interface ReservationRequest {
-  startTime: StartTime;
+  startTime: HourString;
   duration: DurationMinutes;
   courtId: CourtId;
   userId?: string;
@@ -32,7 +32,17 @@ export interface ReservationResult {
   message?: string;
 }
 
-export const generateTimeSlots = (): StartTime[] => {
+export interface BookingConfig {
+  availableDurations: DurationMinutes[];
+}
+
+export interface Slot {
+  startTime: HourString;
+  duration: DurationMinutes;
+  court: Court;
+}
+
+export const generateTimeSlots = (): HourString[] => {
   const slots: string[] = [];
   for (let hour = 8; hour <= 22; hour++) {
     slots.push(`${hour.toString().padStart(2, "0")}:00`);
@@ -40,5 +50,5 @@ export const generateTimeSlots = (): StartTime[] => {
       slots.push(`${hour.toString().padStart(2, "0")}:30`);
     }
   }
-  return slots as StartTime[];
+  return slots as HourString[];
 };

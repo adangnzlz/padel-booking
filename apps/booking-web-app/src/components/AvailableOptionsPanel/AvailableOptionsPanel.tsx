@@ -1,36 +1,32 @@
 // components/AvailableOptionsPanel.tsx
 
-import React, { useEffect, useMemo, useState } from "react";
-import type { Court, Reservation, StartTime, DurationMinutes } from "@booking/types";
+import React, { useMemo, useState } from "react";
+import { Court, DurationMinutes, DURATION_MINUTES, HourString } from "@booking/types";
 import Select from "../ui/Select";
-
+import { FC } from 'react';
 
 interface Slot {
-  startTime: StartTime;
+  startTime: HourString;
   duration: DurationMinutes;
   court: Court;
 }
 
 interface AvailableOptionsPanelProps {
   slots: Slot[];
-  onDurationChange: (duration: DurationMinutes) => void;
-  onBookSlot: (courtId: number, startTime: StartTime, duration: DurationMinutes) => Promise<void>;
+  onBookSlot: (courtId: number, startTime: HourString, duration: DurationMinutes) => void;
 }
 
-const DURATIONS: DurationMinutes[] = [60, 90, 120];
-
-export default function AvailableOptionsPanel({
+const AvailableOptionsPanel: FC<AvailableOptionsPanelProps> = ({
   slots,
-  onDurationChange,
   onBookSlot,
-}: AvailableOptionsPanelProps) {
+}: AvailableOptionsPanelProps) => {
   const [selectedCourtId, setSelectedCourtId] = useState<number | null>(null);
   const [selectedDuration, setSelectedDuration] = useState<DurationMinutes>(90);
 
   const filteredSlots = useMemo(() => {
     if (selectedCourtId === null && slots.length > 0) setSelectedCourtId(slots[0].court.id);
-    return slots.filter(slot => slot.court.id === selectedCourtId);
-  }, [slots, selectedCourtId]);
+    return slots.filter(slot => slot.court.id === selectedCourtId && slot.duration === selectedDuration);
+  }, [slots, selectedCourtId, selectedDuration]);
 
   const handleCourtChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const courtId = event.target.value === "all" ? null : parseInt(event.target.value);
@@ -40,7 +36,6 @@ export default function AvailableOptionsPanel({
   const handleDurationChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const duration = parseInt(event.target.value) as DurationMinutes;
     setSelectedDuration(duration);
-    onDurationChange(duration);
   };
 
   const handleBookSlot = async (slot: Slot) => {
@@ -68,7 +63,7 @@ export default function AvailableOptionsPanel({
           <Select
             value={selectedDuration}
             onChange={handleDurationChange}
-            options={Array.from(new Set(slots.map(slot => slot.duration))).map(duration => ({ value: duration, label: `${duration} min` }))}
+            options={DURATION_MINUTES.map(duration => ({ value: duration, label: `${duration} min` }))}
           />
         </div>
       </div>
@@ -93,3 +88,5 @@ export default function AvailableOptionsPanel({
     </div>
   );
 }
+
+export default AvailableOptionsPanel;

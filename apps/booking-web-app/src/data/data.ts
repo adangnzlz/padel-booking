@@ -1,22 +1,4 @@
-import type {
-  Court,
-  Reservation,
-  StartTime,
-} from "@booking/types";
-
-// Helper function to check if two reservations overlap
-const doReservationsOverlap = (r1: Reservation, r2: Reservation): boolean => {
-  const [r1Hours, r1Minutes] = r1.startTime.split(':').map(Number);
-  const [r2Hours, r2Minutes] = r2.startTime.split(':').map(Number);
-  
-  const r1Start = r1Hours * 60 + r1Minutes;
-  const r1End = r1Start + r1.duration;
-  
-  const r2Start = r2Hours * 60 + r2Minutes;
-  const r2End = r2Start + r2.duration;
-  
-  return !(r1End <= r2Start || r1Start >= r2End);
-};
+import type { Court, HourString, Reservation } from "@booking/types";
 
 // Courts data
 export const courts: Court[] = [
@@ -146,13 +128,13 @@ const rawReservations: Reservation[] = [
     courtId: 4,
     startTime: "21:30",
     duration: 90,
-  }
+  },
 ];
 
 // Clean up overlapping reservations
 const cleanReservations = (reservations: Reservation[]): Reservation[] => {
   const cleanReservations: Reservation[] = [];
-  
+
   // Group reservations by court
   const groupedReservations = reservations.reduce((acc, curr) => {
     if (!acc[curr.courtId]) {
@@ -163,20 +145,20 @@ const cleanReservations = (reservations: Reservation[]): Reservation[] => {
   }, {} as { [key: number]: Reservation[] });
 
   // Process each court's reservations
-  Object.values(groupedReservations).forEach(courtReservations => {
+  Object.values(groupedReservations).forEach((courtReservations) => {
     // Sort by start time
     courtReservations.sort((a, b) => {
-      const [aHours, aMinutes] = a.startTime.split(':').map(Number);
-      const [bHours, bMinutes] = b.startTime.split(':').map(Number);
-      return (aHours * 60 + aMinutes) - (bHours * 60 + bMinutes);
+      const [aHours, aMinutes] = a.startTime.split(":").map(Number);
+      const [bHours, bMinutes] = b.startTime.split(":").map(Number);
+      return aHours * 60 + aMinutes - (bHours * 60 + bMinutes);
     });
 
     // Add non-overlapping reservations
     let lastEndTime = 0;
-    courtReservations.forEach(reservation => {
-      const [hours, minutes] = reservation.startTime.split(':').map(Number);
+    courtReservations.forEach((reservation) => {
+      const [hours, minutes] = reservation.startTime.split(":").map(Number);
       const startTime = hours * 60 + minutes;
-      
+
       if (startTime >= lastEndTime) {
         cleanReservations.push(reservation);
         lastEndTime = startTime + reservation.duration;
@@ -189,3 +171,36 @@ const cleanReservations = (reservations: Reservation[]): Reservation[] => {
 
 // Apply cleanup
 export const reservations = cleanReservations(rawReservations);
+
+export const TIME_SLOTS: HourString[] = [
+  "08:00",
+  "08:30",
+  "09:00",
+  "09:30",
+  "10:00",
+  "10:30",
+  "11:00",
+  "11:30",
+  "12:00",
+  "12:30",
+  "13:00",
+  "13:30",
+  "14:00",
+  "14:30",
+  "15:00",
+  "15:30",
+  "16:00",
+  "16:30",
+  "17:00",
+  "17:30",
+  "18:00",
+  "18:30",
+  "19:00",
+  "19:30",
+  "20:00",
+  "20:30",
+  "21:00",
+  "21:30",
+  "22:00",
+  "22:30",
+];

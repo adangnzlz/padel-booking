@@ -1,19 +1,20 @@
-export interface GridHeader {
+export interface BookingGridHeader {
   id: string;
   label: string;
 }
 
-export interface GridCell {
+export interface BookingGridCell {
   occupied: boolean;
   label?: string;
 }
 
-export interface GridRow {
+export interface BookingGridRow {
   time: string;
-  cells: GridCell[];
+  cells: BookingGridCell[];
 }
 
-export interface GridData {
-  headers: GridHeader[];
-  rows: GridRow[];
+export interface BookingGridData {
+  headers: BookingGridHeader[];
+  rows: BookingGridRow[];
 }
+
