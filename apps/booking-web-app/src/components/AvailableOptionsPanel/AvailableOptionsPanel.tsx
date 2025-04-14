@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import type { Court, Reservation, StartTime, DurationMinutes } from "@booking/types";
+import Select from "../ui/Select";
 
 interface AvailableOptionsPanelProps {
   slots: { courtId: number; startTime: StartTime; duration: DurationMinutes }[];
@@ -58,29 +59,19 @@ export default function AvailableOptionsPanel({
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-bold">Opciones disponibles</h2>
         <div className="flex gap-4">
-          <select
+          <Select
             value={selectedCourtId ?? "all"}
             onChange={handleCourtChange}
-            className="border rounded-lg px-3 py-2 bg-white cursor-pointer transition-all duration-200"
-          >
-            <option value="all">Todas las pistas</option>
-            {courts.map((court) => (
-              <option key={court.id} value={court.id}>
-                {court.name}
-              </option>
-            ))}
-          </select>
-          <select
+            options={[
+              { value: "all", label: "Todas las pistas" },
+              ...courts.map((court) => ({ value: court.id, label: court.name })),
+            ]}
+          />
+          <Select
             value={selectedDuration}
             onChange={handleDurationChange}
-            className="border rounded-lg px-3 py-2 bg-white cursor-pointer transition-all duration-200"
-          >
-            {DURATIONS.map((duration) => (
-              <option key={duration} value={duration}>
-                {duration} min
-              </option>
-            ))}
-          </select>
+            options={DURATIONS.map((duration) => ({ value: duration, label: `${duration} min` }))}
+          />
         </div>
       </div>
 
