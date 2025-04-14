@@ -4,9 +4,15 @@ import React, { useEffect, useMemo, useState } from "react";
 import type { Court, Reservation, StartTime, DurationMinutes } from "@booking/types";
 import Select from "../ui/Select";
 
+
+interface Slot {
+  startTime: StartTime;
+  duration: DurationMinutes;
+  court: Court;
+}
+
 interface AvailableOptionsPanelProps {
-  slots: { courtId: number; startTime: StartTime; duration: DurationMinutes }[];
-  courts: Court[];
+  slots: Slot[];
   onDurationChange: (duration: DurationMinutes) => void;
   onBookSlot: (courtId: number, startTime: StartTime, duration: DurationMinutes) => Promise<void>;
 }
@@ -15,28 +21,15 @@ const DURATIONS: DurationMinutes[] = [60, 90, 120];
 
 export default function AvailableOptionsPanel({
   slots,
-  courts,
   onDurationChange,
   onBookSlot,
 }: AvailableOptionsPanelProps) {
-  const [selectedCourtId, setSelectedCourtId] = useState<number | null>(() => {
-    if (courts.length > 0) {
-      return courts[0].id;
-    }
-    return null;
-  });
-
-  // Update selected court when courts prop changes
-  useEffect(() => {
-    if (courts.length > 0 && selectedCourtId === null) {
-      setSelectedCourtId(courts[0].id);
-    }
-  }, [courts, selectedCourtId]);
+  const [selectedCourtId, setSelectedCourtId] = useState<number | null>(null);
   const [selectedDuration, setSelectedDuration] = useState<DurationMinutes>(90);
 
   const filteredSlots = useMemo(() => {
-    if (selectedCourtId === null) return slots;
-    return slots.filter(slot => slot.courtId === selectedCourtId);
+    if (selectedCourtId === null && slots.length > 0) setSelectedCourtId(slots[0].court.id);
+    return slots.filter(slot => slot.court.id === selectedCourtId);
   }, [slots, selectedCourtId]);
 
   const handleCourtChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -50,8 +43,8 @@ export default function AvailableOptionsPanel({
     onDurationChange(duration);
   };
 
-  const handleBookSlot = async (slot: { courtId: number; startTime: StartTime; duration: DurationMinutes }) => {
-    await onBookSlot(slot.courtId, slot.startTime, slot.duration);
+  const handleBookSlot = async (slot: Slot) => {
+    await onBookSlot(slot.court.id, slot.startTime, slot.duration);
   };
 
   return (
@@ -64,13 +57,18 @@ export default function AvailableOptionsPanel({
             onChange={handleCourtChange}
             options={[
               { value: "all", label: "Todas las pistas" },
-              ...courts.map((court) => ({ value: court.id, label: court.name })),
+              ...Array.from(new Set(slots.map(slot => slot.court.id))).map(
+                (courtId) => ({
+                  value: courtId,
+                  label: slots.find(slot => slot.court.id === courtId)?.court.name || `Pista ${courtId}`
+                })
+              ),
             ]}
           />
           <Select
             value={selectedDuration}
             onChange={handleDurationChange}
-            options={DURATIONS.map((duration) => ({ value: duration, label: `${duration} min` }))}
+            options={Array.from(new Set(slots.map(slot => slot.duration))).map(duration => ({ value: duration, label: `${duration} min` }))}
           />
         </div>
       </div>
@@ -83,7 +81,7 @@ export default function AvailableOptionsPanel({
         <div className="flex flex-wrap justify-center gap-3 py-6">
           {filteredSlots.map((slot) => (
             <button
-              key={`${slot.startTime}-${slot.courtId}`}
+              key={`${slot.startTime}-${slot.court.id}`}
               onClick={() => handleBookSlot(slot)}
               className="inline-flex items-center px-6 py-3 min-w-[120px] rounded-full border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 justify-center"
             >
