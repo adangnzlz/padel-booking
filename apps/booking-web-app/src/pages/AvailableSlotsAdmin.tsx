@@ -23,7 +23,7 @@ const AvailableSlotsAdmin: FC = () => {
           <h1 className="text-2xl font-bold">Available Slots (Admin)</h1>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="p-6">
           <AvailableOptionsPanel
             slots={slots}
             onBookSlot={handleBookSlot}

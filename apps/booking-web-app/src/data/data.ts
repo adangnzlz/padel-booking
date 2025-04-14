@@ -4,29 +4,29 @@ import type { Court, HourString, Reservation } from "@booking/types";
 export const courts: Court[] = [
   {
     id: 1,
-    name: "Pista 1",
+    name: "Court 1",
     slots: [],
   },
   {
     id: 2,
-    name: "Pista 2",
+    name: "Court 2",
     slots: [],
   },
   {
     id: 3,
-    name: "Pista 3",
+    name: "Court 3",
     slots: [],
   },
   {
     id: 4,
-    name: "Pista 4",
+    name: "Court 4",
     slots: [],
   },
 ];
 
 // Reservations data
 const rawReservations: Reservation[] = [
-  // Pista 1
+  // Court 1
   {
     id: "1",
     courtId: 1,
@@ -58,7 +58,7 @@ const rawReservations: Reservation[] = [
     duration: 60,
   },
 
-  // Pista 2
+  // Court 2
   {
     id: "2",
     courtId: 2,
@@ -90,7 +90,7 @@ const rawReservations: Reservation[] = [
     duration: 90,
   },
 
-  // Pista 3
+  // Court 3
   {
     id: "6",
     courtId: 3,
@@ -110,7 +110,7 @@ const rawReservations: Reservation[] = [
     duration: 90,
   },
 
-  // Pista 4
+  // Court 4
   {
     id: "7",
     courtId: 4,

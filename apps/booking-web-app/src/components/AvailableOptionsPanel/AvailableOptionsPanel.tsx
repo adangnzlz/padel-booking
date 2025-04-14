@@ -45,17 +45,17 @@ const AvailableOptionsPanel: FC<AvailableOptionsPanelProps> = ({
   return (
     <div className="p-4 border rounded">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold">Opciones disponibles</h2>
+        <h2 className="text-lg font-bold">Available Options</h2>
         <div className="flex gap-4">
           <Select
             value={selectedCourtId ?? "all"}
             onChange={handleCourtChange}
             options={[
-              { value: "all", label: "Todas las pistas" },
+              { value: "all", label: "All Courts" },
               ...Array.from(new Set(slots.map(slot => slot.court.id))).map(
                 (courtId) => ({
                   value: courtId,
-                  label: slots.find(slot => slot.court.id === courtId)?.court.name || `Pista ${courtId}`
+                  label: slots.find(slot => slot.court.id === courtId)?.court.name || `Court ${courtId}`
                 })
               ),
             ]}
@@ -70,7 +70,7 @@ const AvailableOptionsPanel: FC<AvailableOptionsPanelProps> = ({
 
       {filteredSlots.length === 0 ? (
         <div className="flex justify-center items-center py-8">
-          <p className="text-gray-500">No hay opciones disponibles</p>
+          <p className="text-gray-500">No options available</p>
         </div>
       ) : (
         <div className="flex flex-wrap justify-center gap-3 py-6">

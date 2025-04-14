@@ -13,7 +13,7 @@ const Layout: React.FC = () => {
     <div className="flex h-screen bg-gray-100">
       <nav className="w-64 bg-white shadow-lg">
         <div className="p-4">
-          <h1 className="text-xl font-bold mb-8">Padel Booking</h1>
+          <h1 className="text-xl font-bold mb-8">Padel Court Booking</h1>
           <ul className="space-y-2">
             {menuItems.map((item) => (
               <li key={item.path}>
